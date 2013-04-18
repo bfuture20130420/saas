@@ -19,8 +19,9 @@ public class TCDocQueryManagerImpl extends BaseManagerImpl
 
     public TCDocQueryManagerImpl()
     {
-        if(dao == null)
-            dao = (UniversalAppDao)getSpringBean("universalAppDao");
+        if(dao == null){
+        	dao = (UniversalAppDao)getSpringBean("universalAppDao");
+        }      
     }
 
     public ReturnObject getResult(Object o)
