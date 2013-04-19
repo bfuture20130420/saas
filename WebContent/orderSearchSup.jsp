@@ -23,6 +23,10 @@
 	}
 </style>
 	<script type="text/javascript">
+	var now = new Date(); 
+	now.setDate( now.getDate() - 7 );
+	$("#startDate").val( now.format('yyyy-MM-dd') );
+	$("#endDate").attr("value",new Date().format('yyyy-MM-dd'));
 		$(function(){
 			// 填充订单头列表
 			$('#orderSearchSupList').datagrid({
@@ -290,9 +294,9 @@
 		<td align="right" width="100">订单编号：</td>
 		<td align="left" width="230"><input type="text" name="bohbillno" id="bohbillno" value="" width="110" /> </td>
 		<td align="right" width="100">开始日期：</td>
-		<td align="left" width="230"><input type="text" name="startDate" id="startDate" value="" size="20"  onClick="WdatePicker();" /> </td>
+		<td align="left" width="230"><input type="text" name="startDate" id="startDate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'});" /> </td>
 		<td align="right" width="100">结束日期：</td>
-		<td align="left" width="240"><input type="text" name="endDate" id="endDate" value="" size="20"  onClick="WdatePicker();" /> </td>
+		<td align="left" width="240"><input type="text" name="endDate" id="endDate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'});" /> </td>
 	</tr> 
 	<tr>
 		<td align="right" width="100">门店名称：</td>
