@@ -30,7 +30,7 @@
 			//上传文件
 			var load = new AjaxUpload( "upload", {
 				action : "AttachmentUploadServlet.jsp",
-				autoSubmit:false,
+				// autoSubmit:false,
 				onChange : function(file, extension) {
     				$("#ppfile").val(file);
 					// 附件类型的验证
@@ -213,7 +213,7 @@
 		<div style="margin:0 auto; width:800px; height:400px; padding:0; border:0;">
 			<table id="popInfo" width="100%" border="0" style="line-height:30px; font-size:12px; padding:0; margin:0">
 		  <tr>
-		    <td colspan="4"><span>价格管理</span>-&gt;促销或变价申请 <span>-&gt;发送申请</span></td>
+		    <td colspan="4"><span>价格管理</span>-&gt;促销或变价申请 <span>-&gt;发送申请页面</span></td>
 		  </tr>
 		  <tr>
 		    <td class="label_style">商品条码：</td>
