@@ -20,8 +20,8 @@ private static final long serialVersionUID = 1L;
 		System.out.println("DownloadFile filename:" + filename);
 		java.io.File file = new java.io.File(filepath + filename);
 		if (!file.exists()) {
-		System.out.println(file.getAbsolutePath() + " 文件不存在!");
-		return;
+			System.out.println(file.getAbsolutePath() + " 文件不存在!");
+			return;
 		}
 		// 读取文件流
 		java.io.FileInputStream fileInputStream = new java.io.FileInputStream(file);
