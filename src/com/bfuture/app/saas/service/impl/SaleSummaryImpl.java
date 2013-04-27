@@ -2795,8 +2795,7 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 		try {
 			SaleReport saleReport = (SaleReport) o[0]; // 查询条件
 			String goodssaleTable="YW_GOODSSALE"+saleReport.getGssgcode();
-			StringBuffer countSql =  new StringBuffer("SELECT count(S.GSGDID) FROM "+goodssaleTable+" S left join INF_GOODS G on S.GSGDID=G.GDID and S.GSSGCODE=G.GDSGCODE and S.GSBARCODE = G.GDBARCODE  LEFT JOIN INF_SUPINFO D ON S.GSSGCODE = D.SUPSGCODE AND S.GSSUPID = D.SUPID ");
-			StringBuffer sumSql = new StringBuffer("select cast('合计' as varchar2(32)) GSGDID,SUM(GSXSSL) GSXSSL,SUM(GSHSJJJE)GSHSJJJE,SUM(S.GSXSJE)GSXSJE,SUM(S.GSHSJJJE)GSHSJJJE,SUM(S.GSXSSR)GSXSSR FROM "+goodssaleTable+" S left join INF_GOODS G on S.GSGDID=G.GDID and S.GSSGCODE=G.GDSGCODE and S.GSBARCODE = G.GDBARCODE LEFT JOIN INF_SUPINFO D ON S.GSSGCODE = D.SUPSGCODE AND S.GSSUPID = D.SUPID ");
+			StringBuffer sumSql = new StringBuffer("select cast('合计' as varchar2(32)) GSGDID,SUM(GSXSSL) GSXSSL,SUM(GSHSJJJE)GSHSJJJE,SUM(S.GSXSJE)GSXSJE,SUM(S.GSHSJJJE)GSHSJJJE,SUM(S.GSXSSR)GSXSSR from "+goodssaleTable+" S LEFT JOIN INF_SUPINFO D ON S.GSSGCODE=D.SUPSGCODE AND S.GSSUPID=D.SUPID left join INF_GOODS G on S.GSGDID=G.GDID and S.GSSGCODE=G.GDSGCODE and S.GSBARCODE = G.GDBARCODE  ");
 			StringBuffer sql = new StringBuffer("select to_char(S.GSRQ,'yyyy-MM-dd') as GSRQ,S.GSSUPID,D.SUPNAME,S.GSGDID,S.GSBARCODE,G.GDNAME,G.GDPPNAME,G.GDSPEC,G.GDUNIT,SUM(S.GSXSSL) GSXSSL,SUM(S.GSHSJJJE) GSHSJJJE,SUM(S.GSXSJE) GSXSJE,SUM(S.GSXSSR) GSXSSR from "+goodssaleTable+" S LEFT JOIN INF_SUPINFO D ON S.GSSGCODE=D.SUPSGCODE AND S.GSSUPID=D.SUPID left join INF_GOODS G on S.GSGDID=G.GDID and S.GSSGCODE=G.GDSGCODE and S.GSBARCODE = G.GDBARCODE  ");
 			
 			StringBuffer whereStr = new StringBuffer(" where 1=1 ");
@@ -2831,22 +2830,23 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			//统计查询
 			sumSql.append(whereStr);
 			List lstSumResult = dao.executeSql(sumSql.toString());
-			countSql.append(whereStr);
-			List lstResult = dao.executeSqlCount(countSql.toString());
+			
 			int limit = saleReport.getRows();
 			int start = (saleReport.getPage() - 1)* saleReport.getRows();	
 			whereStr.append("group by to_char(S.GSRQ,'yyyy-MM-dd'),S.GSSUPID,D.SUPNAME,S.GSGDID,S.GSBARCODE,G.GDNAME,G.GDPPNAME,G.GDSPEC,G.GDUNIT");
-			if( saleReport.getOrder() != null && saleReport.getSort() != null ){
-				whereStr.append(" order by " + saleReport.getSort()+" "+saleReport.getOrder());
-			}else{
-				whereStr.append(" order by S.GSGDID desc ");
-			}
 			sql.append(whereStr);
+			List lstResult = dao.executeSql(sql.toString());
+			if( saleReport.getOrder() != null && saleReport.getSort() != null ){
+				sql.append(" order by " + saleReport.getSort()+" "+saleReport.getOrder());
+			}else{
+				sql.append(" order by S.GSGDID desc ");
+			}
+			
 			List lstRowResult = dao.executeSql(sql.toString(), start, limit);
 			if (lstResult != null) {
 				result.setRows(lstRowResult);
 				result.setFooter(lstSumResult);
-				result.setTotal(Integer.parseInt(lstResult.get(0).toString()));
+				result.setTotal(lstResult.size());
 				result.setReturnCode(Constants.SUCCESS_FLAG);
 			}
 		} catch (Exception ex) {
@@ -2862,7 +2862,6 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 		try {
 			SaleReport saleReport = (SaleReport) o[0];
 			String goodssaleTable="YW_GOODSSALE"+saleReport.getGssgcode();
-			StringBuffer countSql =  new StringBuffer("SELECT count(S.GSGDID) from "+goodssaleTable+" S LEFT JOIN INF_SUPINFO D ON S.GSSGCODE = D.SUPSGCODE AND S.GSSUPID = D.SUPID left join (select G.GDSGCODE,G.GDID,G.GDBARCODE,G.GDCATID,C.GCNAME from INF_GOODS G left join INF_GOODSCAT C on G.GDCATID = C.GCID and G.GDSGCODE = C.GCSGCODE)K on S.GSGDID = K.GDID and S.GSBARCODE = K.GDBARCODE and S.GSSGCODE = K.GDSGCODE ");
 			StringBuffer sumSql = new StringBuffer( "SELECT cast('合计' as varchar2(30)) GDCATID,SUM(GSXSSL) GSXSSL,SUM(S.GSXSJE) GSXSJE,SUM(S.GSHSJJJE)GSHSJJJE,SUM(S.GSXSSR)GSXSSR from "+goodssaleTable+" S LEFT JOIN INF_SUPINFO D ON S.GSSGCODE = D.SUPSGCODE AND S.GSSUPID = D.SUPID left join (select G.GDSGCODE,G.GDID,G.GDBARCODE,G.GDCATID,C.GCNAME from INF_GOODS G left join INF_GOODSCAT C on G.GDCATID = C.GCID and G.GDSGCODE = C.GCSGCODE)K on S.GSGDID = K.GDID and S.GSBARCODE = K.GDBARCODE and S.GSSGCODE = K.GDSGCODE ");
 			StringBuffer sql = new StringBuffer("select K.GDCATID,K.GCNAME,S.GSSUPID,D.SUPNAME,SUM(S.GSXSSL) GSXSSL,sum(S.GSXSJE) GSXSJE,SUM(S.GSHSJJJE) GSHSJJJE, SUM(S.GSXSSR) GSXSSR from "+goodssaleTable+" S LEFT JOIN INF_SUPINFO D ON S.GSSGCODE = D.SUPSGCODE AND S.GSSUPID = D.SUPID left join (select G.GDSGCODE,G.GDID,G.GDBARCODE,G.GDCATID,C.GCNAME from INF_GOODS G left join INF_GOODSCAT C on G.GDCATID = C.GCID and G.GDSGCODE = C.GCSGCODE)K on S.GSGDID = K.GDID and S.GSBARCODE = K.GDBARCODE and S.GSSGCODE = K.GDSGCODE ");
 			
@@ -2893,27 +2892,28 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			
 			sumSql.append(whereStr);
 			List lstSumResult = dao.executeSql(sumSql.toString());
-			countSql.append(whereStr);
-			List lstResult = dao.executeSqlCount(countSql.toString());
-	
+
 			int limit = saleReport.getRows();
 			int start = (saleReport.getPage() - 1)* saleReport.getRows();
 			
 			
 			whereStr.append(" group by K.GDCATID,K.GCNAME,S.GSSUPID,D.SUPNAME ");
+			sql.append(whereStr);
+			
+			List lstResult = dao.executeSql(sql.toString());
 			if( saleReport.getOrder() != null && saleReport.getSort() != null ){
-				whereStr.append(" order by " + saleReport.getSort()+" "+saleReport.getOrder());
+				sql.append(" order by " + saleReport.getSort()+" "+saleReport.getOrder());
 			}else{
-				whereStr.append(" order by K.GDCATID desc ");
+				sql.append(" order by K.GDCATID desc ");
 			}
-			sql.append(whereStr);	
 			List lstRowResult = dao.executeSql(sql.toString(), start, limit);
-				if (lstResult != null) {
-					result.setRows(lstRowResult);
-					result.setFooter(lstSumResult);
-					result.setTotal(Integer.parseInt(lstResult.get(0).toString()));
-					result.setReturnCode(Constants.SUCCESS_FLAG);
-				}
+			
+			if (lstResult != null) {
+				result.setRows(lstRowResult);
+				result.setFooter(lstSumResult);
+				result.setTotal(lstResult.size());
+				result.setReturnCode(Constants.SUCCESS_FLAG);
+			}
 		} catch (Exception ex) {
 			log.error("SaleSummaryImpl.getSaleCategory() error :"+ex.getMessage());
 			result.setReturnCode(Constants.ERROR_FLAG);
