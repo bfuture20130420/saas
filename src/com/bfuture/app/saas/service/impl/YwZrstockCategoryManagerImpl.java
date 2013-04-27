@@ -55,6 +55,12 @@ public class YwZrstockCategoryManagerImpl extends BaseManagerImpl implements YwZ
 			if( !StringUtil.isBlank( stock.getZsmfid() ) ){// 门店编码
 				whereStr.append( " and Z.ZSMFID = '" ).append( stock.getZsmfid() ).append("'");
 			}
+			if( !StringUtil.isBlank( stock.getGdbarcode()) ){// 商品条码
+				whereStr.append( " and Z.ZSBARCODE = '" ).append( stock.getGdbarcode() ).append("'");
+			}
+			if( !StringUtil.isBlank( stock.getZsgdid()) ){// 商品编码
+				whereStr.append( " and Z.ZSGDID = '" ).append( stock.getZsgdid() ).append("'");
+			}
 			if( !StringUtil.isBlank( stock.getGdcatid() ) ){// [商品类别编码]
 				whereStr.append( " and G.GDCATID = '" ).append( stock.getGdcatid() ).append("'");
 			}
