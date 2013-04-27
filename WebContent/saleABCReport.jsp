@@ -280,6 +280,18 @@
 				 <INPUT size="1" style="background-color : #eee6f1;" type="text" readonly>C类商品			 
 	 		</strong>
  		</div>
+ 		<br/>
+ 		<table style="width:730px;font-size:12px;">
+ 			<tr>
+ 				<td align="left">一：系统定义累计占比在70%以内为A类，在70%－90%为B类，90%以上为C类。A类为销售最好的商品，B类次之，C类销售最差。</td>
+ 			</tr>
+ 			<tr>
+ 				<td align="left">二：占比：是用这个商品的销售金额或数量除于总的销售金额或数量</td>
+ 			</tr>
+ 			<tr>
+ 				<td align="left">三：累计占比：是从上面往下加的累计第二个商品的累计占比是第一个的累计占比加上第二个商品的占比，一次往下类推，最后那个商品的累计占比肯定是100%</td>
+ 			</tr>
+ 		</table>
  		<%if( lstGds != null ){ %>
  		<div style="color:#336699;float: right"><a href="<%=request.getContextPath() + "/temp/" + currUser.getSucode() + ".xls" %>">&gt;&gt;导出Excel表格</a></div><br>
  		<%} %>
