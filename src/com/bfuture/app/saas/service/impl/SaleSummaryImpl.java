@@ -2022,8 +2022,9 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 		}else if("getLssSaleSum".equals(actionType)){//零售商销售汇总查询
 			SaleReport saleReport = (SaleReport) o[0];
 			try {
+				String gsTableName="YW_GOODSSALE"+(StringUtil.isBlank(saleReport.getGssgcode())?"":saleReport.getGssgcode());
 				boolean flag_3010=saleReport.getGssgcode().equals("3010");
-					StringBuffer sql = new StringBuffer("select d.shpcode,d.shpname,round(sum(gsxsje),2) gsxsje,round(sum(s.gsxsje-s.gshsjjje),2)maole  from yw_goodssale s left join inf_shop d on s.gsmfid = d.shpcode and s.gssgcode = d.sgcode where 1 = 1");	
+					StringBuffer sql = new StringBuffer("select d.shpcode,d.shpname,round(sum(gsxsje),2) gsxsje,round(sum(s.gsxsje-s.gshsjjje),2)maole  from ").append(gsTableName).append(" s left join inf_shop d on s.gsmfid = d.shpcode and s.gssgcode = d.sgcode where 1 = 1");	
 					if(!StringUtil.isBlank(saleReport.getGssgcode())){
 						sql.append(" and s.gssgcode = '").append(saleReport.getGssgcode()).append("'");
 					}
@@ -2055,11 +2056,10 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 						
 					StringBuffer lsql = new StringBuffer("select * from ("+sql.toString()+")  order by gsxsje desc");
 					log.info("saleShopResultSql: " + lsql);
-					System.out.println("零售商销售汇总查询SQL:"+lsql);
 				    List lstResult = dao.executeSql(lsql.toString());
 					log.debug("SaleSummaryImpl.getResult() lstResult 1 :"+ lstResult);
 					//汇总的查询footer
-					StringBuffer sumSql= new StringBuffer("select cast('合计' as varchar2(32)) shpcode, round(sum(gsxsje),2) gsxsje,round(sum(s.gsxsje-s.gshsjjje),2) maole from yw_goodssale s left join inf_shop p on s.gsmfid = p.shpcode and s.gssgcode = p.sgcode where 1 = 1 ");
+					StringBuffer sumSql= new StringBuffer("select cast('合计' as varchar2(32)) shpcode, round(sum(gsxsje),2) gsxsje,round(sum(s.gsxsje-s.gshsjjje),2) maole from ").append(gsTableName).append(" s left join inf_shop p on s.gsmfid = p.shpcode and s.gssgcode = p.sgcode where 1 = 1 ");
 					
 					if(!StringUtil.isBlank(saleReport.getGssgcode())){
 						sumSql.append(" and s.gssgcode = '").append(saleReport.getGssgcode()).append("'");
@@ -2081,7 +2081,6 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 					}
 					
 					log.info("sumSql:"+sumSql);
-					System.out.println("合计查询SQL:"+sumSql);
 					List sumResult= dao.executeSql(sumSql.toString()); 
 					log.debug("SaleSummaryImpl.getResult() lstResult 1 :"+ sumResult);
 					
