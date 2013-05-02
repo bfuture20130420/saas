@@ -123,7 +123,7 @@ a:hover {
 			});
 			
 			$('#saleGsrqDetail').datagrid({
-				width: 836,
+				width: 840,
 				iconCls:'icon-save',
 				nowrap: false,
 				striped: true,
@@ -156,8 +156,18 @@ a:hover {
 				    {field:'GDNAME',title:'商品名称',width:297,align:'left',sortable:true},	
 				    {field:'GDSPEC',title:'规格',width:80,align:'center',sortable:true},
 				    {field:'GDUNIT',title:'单位',width:60,align:'center',sortable:true},
-					{field:'GSXSSL',title:'销售数量',width:80,align:'center',sortable:true}			
-					,{field:'GSHSJJJE',title:'进价成本',width:90,align:'center',sortable:true}
+					{field:'GSXSSL',title:'销售数量',width:80,align:'center',sortable:true,formatter:function(value,rec){
+						if( value != null && value != undefined )
+							return formatNumber(value,{   
+							decimalPlaces: 2,thousandsSeparator :','
+							});
+					}}			
+					,{field:'GSHSJJJE',title:'进价成本',width:90,align:'center',sortable:true,formatter:function(value,rec){
+						if( value != null && value != undefined )
+							return formatNumber(value,{   
+							decimalPlaces: 2,thousandsSeparator :','
+							});
+					}}
 					<%
 					if("L".equalsIgnoreCase( currUser.getSutype().toString()) ){
 					%>

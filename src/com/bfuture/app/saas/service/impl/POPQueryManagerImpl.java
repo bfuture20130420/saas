@@ -37,8 +37,12 @@ public class POPQueryManagerImpl extends BaseManagerImpl
             POPQuery popQuery = (POPQuery)o[0];
             try
             {	
-            	StringBuffer Sql = new StringBuffer("select p.popsequece,p.pplb,p.ppsupid,p.ppcxxl,p.ppkl,p.ppzkfd,p.ppcxzt,p.ppsgcode,p.ppmarket,sup.supname,p.ppgdid,p.ppbarcode,g.gdname,to_char(p.ppshrq, 'yyyy-mm-dd') as ppSHRQ,to_char(p.ppksrq, 'yyyy-mm-dd') as ppksrq,to_char(p.ppjsrq, 'yyyy-mm-dd') AS ppjsrq,p.ppcxsj,p.ppyssj,s.shpname from yw_popinfo p left join inf_goods g on p.ppgdid = g.gdid and p.ppsgcode = g.gdsgcode and p.ppbarcode = g.gdbarcode left join inf_supinfo sup on p.ppsgcode = sup.supsgcode and p.ppsupid = sup.supid left join  inf_shop s on s.shpcode = p.ppmarket and s.sgcode = p.ppsgcode ");
             	StringBuffer count = new StringBuffer("select count(*) from yw_popinfo p left join inf_goods g on p.ppgdid = g.gdid and p.ppsgcode = g.gdsgcode and p.ppbarcode = g.gdbarcode ");
+            	StringBuffer Sql = new StringBuffer("select p.popsequece,p.pplb,p.ppsupid,p.ppcxxl,p.ppkl,p.ppzkfd,p.ppcxzt,p.ppsgcode,p.ppmarket,sup.supname,p.ppgdid,p.ppbarcode,g.gdname,to_char(p.ppshrq, 'yyyy-mm-dd') as ppSHRQ,to_char(p.ppksrq, 'yyyy-mm-dd') as ppksrq,to_char(p.ppjsrq, 'yyyy-mm-dd') AS ppjsrq,p.ppcxsj,p.ppyssj,s.shpname from yw_popinfo p left join inf_goods g on p.ppgdid = g.gdid and p.ppsgcode = g.gdsgcode and p.ppbarcode = g.gdbarcode left join inf_supinfo sup on p.ppsgcode = sup.supsgcode and p.ppsupid = sup.supid left join  inf_shop s on s.shpcode = p.ppmarket and s.sgcode = p.ppsgcode ");
+            	if("3037".equals(popQuery.getSgcode())){
+            		 count = new StringBuffer("select count(*) from yw_popinfo p left join inf_goods g on p.ppgdid = g.gdid and p.ppsgcode = g.gdsgcode  ");
+            		 Sql = new StringBuffer("select p.popsequece,p.pplb,p.ppsupid,p.ppcxxl,p.ppkl,p.ppzkfd,p.ppcxzt,p.ppsgcode,p.ppmarket,sup.supname,p.ppgdid,p.ppbarcode,g.gdname,to_char(p.ppshrq, 'yyyy-mm-dd') as ppSHRQ,to_char(p.ppksrq, 'yyyy-mm-dd') as ppksrq,to_char(p.ppjsrq, 'yyyy-mm-dd') AS ppjsrq,p.ppcxsj,p.ppyssj,s.shpname from yw_popinfo p left join inf_goods g on p.ppgdid = g.gdid and p.ppsgcode = g.gdsgcode  left join inf_supinfo sup on p.ppsgcode = sup.supsgcode and p.ppsupid = sup.supid left join  inf_shop s on s.shpcode = p.ppmarket and s.sgcode = p.ppsgcode ");
+            	}
             	StringBuffer  wherestr = new StringBuffer(" where 1=1 ");
                 if(StringUtil.isNotEmpty(popQuery.getSgcode()))
                 	wherestr.append((new StringBuilder(" and p.ppsgcode='")).append(popQuery.getSgcode()).append("' ").toString());

@@ -111,16 +111,16 @@
 				loadMsg:'加载数据...',	
 							
 				columns:[[				
-					{field:'SHPCODE',title:'门店编码',width:64,align:'center'},
+					{field:'SHPCODE',title:'门店编码',width:73,align:'center'},
 					{field:'SHPNAME',title:'门店名称',width:120,align:'left'},				
-					{field:'GSXSJE',title:'销售金额',width:75,sortable:true,align:'center',formatter:function(value,rec){
+					{field:'GSXSJE',title:'销售金额',width:80,sortable:true,align:'center',formatter:function(value,rec){
 						if( value != null && value != undefined )
 							return formatNumber(value,{   
 							decimalPlaces: 2,thousandsSeparator :','
 						});
 					}}
 					,
-					{field:'MAOLE',title:'毛利额',width:75,sortable:true,align:'center',formatter:function(value,rec){
+					{field:'MAOLE',title:'毛利额',width:80,sortable:true,align:'center',formatter:function(value,rec){
 							if( value != null && value != undefined )
 								return formatNumber(value,{   
 								decimalPlaces: 2,thousandsSeparator :','
@@ -134,7 +134,7 @@
 			$('#LssSaleSummary').datagrid('options').queryParams = {
 				data :obj2str(
 					{	
-						ACTION_TYPE : <%if("S".equals(currUser.getSutype()+"")){%>'datagrid'<%}else{%>'getLssSaleSum'<%}%>,
+						ACTION_TYPE : 'getLssSaleSum',
 						ACTION_CLASS : 'com.bfuture.app.saas.model.report.SaleReport',
 						ACTION_MANAGER : 'saleSummary',		 
 						list:[{

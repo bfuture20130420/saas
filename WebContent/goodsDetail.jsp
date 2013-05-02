@@ -46,8 +46,9 @@ a:hover {
 			    {field:'GDTAX',title:'税率',width:45,align:'left',sortable:true},	
 			    {field:'GDAREA',title:'产地',width:60,align:'left',sortable:true},
 			    {field:'GDCATID',title:'类别编码',width:100,align:'left',sortable:true},
-			    {field:'GDCATNAME',title:'类别名称',width:150,align:'left',sortable:true},				    	
-			    {field:'TEMP1',title:'进价',width:60,align:'left',sortable:true,
+			    {field:'GDCATNAME',title:'类别名称',width:150,align:'left',sortable:true}	
+			    <%if(!"3037".equals(currUser.getSgcode())){%>
+			    ,{field:'TEMP1',title:'进价',width:60,align:'left',sortable:true,
 			    	formatter:function(value,rec){
 						if( value != null && value != undefined )
 							return formatNumber(value,{decimalPlaces: 2,thousandsSeparator :','});
@@ -60,6 +61,7 @@ a:hover {
 							return formatNumber(value,{decimalPlaces: 2,thousandsSeparator :','});
 					}
 				}
+				<%}%>
 				<%}%>
 			]],
 			toolbar:[{

@@ -77,7 +77,7 @@
 				    	}
 				    	
 				    	if( User.sutype == 'L' || User.sutype == 'M' || User.sutype == 'Z' ){	/*¡„ €…Ã ◊“≥*/
-				    		if(User.sgcode=='3008'||User.sgcode=='3029' || User.sgcode=='3024'){
+				    		if(User.sgcode=='3008'||User.sgcode=='3029' || User.sgcode=='3024'||User.sgcode=='3037'){
 				    		openUrl( 'managerWork.jsp', 'Y',false );
 				    		}else{
 				    		openUrl( 'messageManager.jsp', 'Y',false );
