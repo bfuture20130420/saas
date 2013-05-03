@@ -47,7 +47,7 @@ body{
 					{field:'GDCATID',title:'类别编号',width:"<%if("S".equals(suType)){%>150<%}else{%>130<%}%>",align:'center',sortable:true,formatter:function(value,rec){
 					if(rec.GDCATID == null || rec.GDCATID == 'null'){
 						return '';
-					}else if(rec.GDCATID!='合计'){
+					}else if(rec.GDCATID!='合计' && rec.GDCATID!='小计'){
 						var gcid = "'" + rec.GDCATID + "'";
 						var supid = "'" + rec.GSSUPID + "'";
 						return '<a href="#" style="color:#4574a0; font-weight:bold;" onClick="showDetail(' + gcid + ','+supid+');">' + value + '</a>';

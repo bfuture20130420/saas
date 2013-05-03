@@ -156,4 +156,10 @@
     <bean id="homeManager" class="com.bfuture.app.saas.service.impl.HomeManagerImpl">
     		<property name="dao" ref="universalAppDao" />
     </bean>
+    
+    <!-- 3040好收成业务 -->
+    <bean id="hscManager" class="com.bfuture.app.saas.service.impl.HscManagerImpl">
+    		<property name="dao" ref="universalAppDao" />
+    </bean>
+    
 </beans>

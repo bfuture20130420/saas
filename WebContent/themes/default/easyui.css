@@ -401,7 +401,6 @@
 }
 .datagrid-footer-inner{
 	border-top:1px solid #ccc;
-	width:10000px;
 	float:left;
 }
 .datagrid-body td,.datagrid-footer td{
@@ -828,6 +827,12 @@ a.m-btn-plain-active{
 .pagination-info{
 	float:right;
 	padding-right:6px;
+	padding-top:8px;
+	font-size:12px;
+}
+.pagination-data{
+	float:right;
+	padding-right:12px;
 	padding-top:8px;
 	font-size:12px;
 }
