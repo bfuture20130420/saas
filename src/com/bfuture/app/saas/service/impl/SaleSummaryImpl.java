@@ -6,6 +6,7 @@ import java.util.Map;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -207,8 +208,6 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			result = this.getGoodsStock(o);
 		}else if ("getSaleDetail".equals(actionType)) {
 			result = this.getSaleDetail(o);	
-		}else if ("getSaleCategory".equals(actionType)) {
-			result = this.getSaleCategory(o);
 		}else if ("getSaleCategory".equals(actionType)) {
 			result = this.getSaleCategory(o);
 		}else if ("getSaleCategoryDetail".equals(actionType)) {
@@ -2892,10 +2891,10 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			
 			sumSql.append(whereStr);
 			List lstSumResult = dao.executeSql(sumSql.toString());
-
+			
+			
 			int limit = saleReport.getRows();
 			int start = (saleReport.getPage() - 1)* saleReport.getRows();
-			
 			
 			whereStr.append(" group by K.GDCATID,K.GCNAME,S.GSSUPID,D.SUPNAME ");
 			sql.append(whereStr);
