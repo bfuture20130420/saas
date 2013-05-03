@@ -38,7 +38,7 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 		if (this.dao == null) {
 			this.dao = (UniversalAppDao) getSpringBean("universalAppDao");
 		}
-	}
+	} 
 	
 	/*销售汇总查询*/
 	@Override
