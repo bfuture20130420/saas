@@ -2907,6 +2907,31 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			}
 			List lstRowResult = dao.executeSql(sql.toString(), start, limit);
 			
+			if("3040".equals(saleReport.getGssgcode())){
+				Float GSXSSL = 0.00f ;
+				Float GSXSJE = 0.00f ;
+				Float GSXSSR = 0.00f ;
+				Float GSHSJJJE = 0.0f ;
+				for (int i = 0; i < lstRowResult.size(); i++) {
+					Map map = (Map)lstRowResult.get(i);
+					GSXSSL += Float.parseFloat(map.get("GSXSSL").toString());
+					GSXSJE += Float.parseFloat(map.get("GSXSJE").toString());
+					GSXSSR += Float.parseFloat(map.get("GSXSSR").toString());
+					GSHSJJJE += Float.parseFloat(map.get("GSHSJJJE").toString());
+				}
+				System.out.println(GSXSSL);
+				String subTotal = "{'GDCATID':'小计','GSXSSR':"+GSXSSR+",'GSXSJE':"+GSXSJE+",'GSHSJJJE':"+GSHSJJJE+",'GSXSSL':"+GSXSSL+"}";
+				lstSumResult.add(subTotal);
+				List sumList = dao.executeSql(sumSql.toString());
+				Map mapSum = (Map)sumList.get(0);
+				String sumStr = "{'GDCATID':'合计','GSXSSR':"+Float.parseFloat(mapSum.get("GSXSSR").toString())+",'GSXSJE':"+Float.parseFloat(mapSum.get("GSXSJE").toString())+",'GSHSJJJE':"+Float.parseFloat(mapSum.get("GSHSJJJE").toString())+",'GSXSSL':"+Float.parseFloat(mapSum.get("GSXSSL").toString())+"}";
+				lstSumResult.add(sumStr);
+			}else{
+				lstSumResult = dao.executeSql(sumSql.toString());
+			}
+			
+			
+			
 			if (lstResult != null) {
 				result.setRows(lstRowResult);
 				result.setFooter(lstSumResult);
