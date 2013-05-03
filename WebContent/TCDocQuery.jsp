@@ -29,7 +29,7 @@
 		$("#endDate").attr("value",new Date().format('yyyy-MM-dd'));
 		$(function(){
 			$('#TCDoc').datagrid({
-				width: 1000,
+				width: 930,
 				nowrap: false,
 				striped: true,
 				singleSelect: true,
@@ -38,7 +38,7 @@
 				showFooter:true,
 				loadMsg:'加载数据...',	
 				columns:[[
-				    {field:'BTHBILLNO',title:'退厂单号',width:150,align:'center',sortable:true,
+				    {field:'BTHBILLNO',title:'退厂单号',width:125,align:'center',sortable:true,
 				    formatter:function(value,rec){
 						if(value=='合计')
 						return value;
@@ -46,13 +46,13 @@
 							return "<a href=javascript:void(0) style='color:#4574a0; font-weight:bold;' onclick=TCDocDetail('"+rec.BTHBILLNO+"','"+rec.BTHSGCODE+"','"+rec.BTHTHMFID+"');>" + rec.BTHBILLNO + "</a>";
 						}
 					},
-				    {field:'BTHTHMFID',title:'门店编号',width:100,align:'center',sortable:true},
-					{field:'SHPNAME',title:'门店名称',width:160,sortable:true},
+				    {field:'BTHTHMFID',title:'门店编号',width:80,align:'center',sortable:true},
+					{field:'SHPNAME',title:'门店名称',width:140,sortable:true},
 				    {field:'BTHSHTIME',title:'审核日期',width:100,align:'center',sortable:true},	
 					{field:'BTHSL',title:'数量',width:80,align:'center',sortable:true},
-			        {field:'BTHHSJJJE',title:'金额',width:100,align:'center',sortable:true}
-					,{field:'BTHSUPID',title:'供应商编码',width:80,align:'center',sortable:true},	
-					{field:'SUPNAME',title:'供应商名称',width:250,align:'center',sortable:true}
+			        {field:'BTHHSJJJE',title:'金额',width:90,align:'center',sortable:true}
+					,{field:'BTHSUPID',title:'供应商编码',width:95,align:'center',sortable:true},	
+					{field:'SUPNAME',title:'供应商名称',width:183,align:'center',sortable:true}
 				]],
 				toolbar:[{
 					text:'导出Excel',
@@ -66,7 +66,7 @@
 			});
 
 			$('#TCDocDetail').datagrid({
-				width: 1000,
+				width: 900,
 				nowrap: false,
 				striped: true,
 				singleSelect: true,	
@@ -76,13 +76,13 @@
 				loadMsg:'加载数据...',				
 				columns:[[
 					{field:'BTDGDID',title:'商品编码',width:100,sortable:true},
-					{field:'BTDBARCODE',title:'商品条码',width:150,sortable:true},
-				    {field:'GDNAME',title:'商品名称',width:250,align:'left',sortable:true},			
-				    {field:'GDSPEC',title:'规格',width:75,sortable:true},			
-				    {field:'GDUNIT',title:'单位',width:75,align:'center',sortable:true},
-				    {field:'BTDSL',title:'退厂数量',width:100,align:'center',sortable:true} ,
-					{field:'BTDHSJJ',title:'含税进价',width:100,align:'center',sortable:true} ,
-			        {field:'BTDHSJJJE',title:'含税进价金额',width:150,align:'center',sortable:true}
+					{field:'BTDBARCODE',title:'商品条码',width:140,sortable:true},
+				    {field:'GDNAME',title:'商品名称',width:265,align:'left',sortable:true},			
+				    {field:'GDSPEC',title:'规格',width:65,sortable:true},			
+				    {field:'GDUNIT',title:'单位',width:65,align:'center',sortable:true},
+				    {field:'BTDSL',title:'退厂数量',width:70,align:'center',sortable:true} ,
+					{field:'BTDHSJJ',title:'含税进价',width:78,align:'center',sortable:true} ,
+			        {field:'BTDHSJJJE',title:'含税进价金额',width:78,align:'center',sortable:true}
 				]],
 				pagination:true,
 				rownumbers:true

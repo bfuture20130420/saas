@@ -32,7 +32,7 @@
 			$('#orderSearchSupList').datagrid({
 				nowrap: false,
 				striped: true,			
-				width:1000,	
+				width:User.sutype=='L'?800:695,	
 				sortOrder: 'desc',
 				singleSelect : true,
 				showFooter:true,
@@ -41,21 +41,22 @@
 				idField: 'BOHBILLNO',
 				loadMsg:'加载数据...',
 				columns:[[
-						{field:'BOHBILLNO',title:'订单编号',width:150,sortable:true,
+						{field:'BOHBILLNO',title:'订单编号',width:120,sortable:true,
 							formatter:function(value,rec){
 							var supname3=(rec.SUNAME+'').replace(/\ /g,'');
-								return '<a href=javascript:void(0) style="color:#4574a0; font-weight:bold;" onclick=showOrderDet("'+ rec.BOHBILLNO +'","'+rec.BOHMFID+'","'+rec.BOHSUPID+'","'+rec.SHPNAME+'","'+supname3+'","'+rec.BOHDHRQ+'","'+rec.BOHJHRQ+'","'+rec.BOHQXTIME+'");>' + value + '</a>';
+							if(value=='合计') return value;
+							else	return '<a href=javascript:void(0) style="color:#4574a0; font-weight:bold;" onclick=showOrderDet("'+ rec.BOHBILLNO +'","'+rec.BOHMFID+'","'+rec.BOHSUPID+'","'+rec.SHPNAME+'","'+supname3+'","'+rec.BOHDHRQ+'","'+rec.BOHJHRQ+'","'+rec.BOHQXTIME+'");>' + value + '</a>';
 							}
 						},	
-						{field:'BOHMFID',title:'门店编号',width:100,sortable:true},
-						{field:'SHPNAME',title:'门店名称',width:200,sortable:true},
-						{field:'BOHDHRQ',title:'订货日期',width:150,sortable:true},
-						{field:'BOHJHRQ',title:'送货日期',width:150,sortable:true},
-						{field:'SL',title:'订货数量',width:100,sortable:true},
-						{field:'JE',title:'含税进价金额',width:150,sortable:true}
+						{field:'BOHMFID',title:'门店编号',width:60,sortable:true},
+						{field:'SHPNAME',title:'门店名称',width:120,sortable:true},
+						{field:'BOHDHRQ',title:'订货日期',width:90,sortable:true},
+						{field:'BOHJHRQ',title:'送货日期',width:90,sortable:true},
+						{field:'SL',title:'订货数量',width:80,sortable:true},
+						{field:'JE',title:'含税进价金额',width:100,sortable:true}
 						<%if("L".equals(suType)){%>
-						,{field:'BOHSUPID',title:'供应商编号',width:100,sortable:true},
-						{field:'SUNAME',title:'供应商名称',width:250,sortable:true}
+						,{field:'BOHSUPID',title:'供应商编号',width:70,sortable:true},
+						{field:'SUNAME',title:'供应商名称',width:215,sortable:true}
 						<%}%>
 						
 				]],	
@@ -72,7 +73,7 @@
 			
 			// 填充订单明细列表
 			$('#orderDetSupList').datagrid({
-				width: 1000,
+				width: 905,
 				nowrap: false,
 				striped: true,	
 				url:'',			
@@ -85,14 +86,14 @@
 				rownumbers:true,				
 				columns:[[	
 					{field:'BODGDID',title:'商品编码',width:100,align:'left'},
-					{field:'GDNAME',title:'商品名称',width:300,align:'left'},
+					{field:'GDNAME',title:'商品名称',width:293,align:'left'},
 					{field:'GDBARCODE',title:'商品条码',width:100,align:'left'},
 					{field:'GDSPEC',title:'商品规格',width:70,align:'left'},
-					{field:'GDUNIT',title:'单位',width:70,align:'left'},
+					{field:'GDUNIT',title:'单位',width:48,align:'left'},
 					{field:'BODSL',title:'订货数量',width:60,align:'left'}, 
 					{field:'BODTAX',title:'税率',width:50,align:'left'},
-					{field:'BODHSJJ',title:'含税进价',width:100,align:'left'},
-					{field:'BODHSJJJE',title:'含税进价金额',width:150,align:'left'}		
+					{field:'BODHSJJ',title:'含税进价',width:70,align:'left'},
+					{field:'BODHSJJJE',title:'含税进价金额',width:77,align:'left'}		
 				]]
 			});
 		});
