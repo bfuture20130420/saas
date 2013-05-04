@@ -6,6 +6,7 @@ import java.util.Map;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -2888,7 +2889,7 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			}
 			
 			sumSql.append(whereStr);
-			List lstSumResult = dao.executeSql(sumSql.toString());
+			List lstSumResult = new ArrayList();
 
 			int limit = saleReport.getRows();
 			int start = (saleReport.getPage() - 1)* saleReport.getRows();
@@ -2917,7 +2918,6 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 					GSXSSR += Float.parseFloat(map.get("GSXSSR").toString());
 					GSHSJJJE += Float.parseFloat(map.get("GSHSJJJE").toString());
 				}
-				System.out.println(GSXSSL);
 				String subTotal = "{'GDCATID':'小计','GSXSSR':"+GSXSSR+",'GSXSJE':"+GSXSJE+",'GSHSJJJE':"+GSHSJJJE+",'GSXSSL':"+GSXSSL+"}";
 				lstSumResult.add(subTotal);
 				List sumList = dao.executeSql(sumSql.toString());
