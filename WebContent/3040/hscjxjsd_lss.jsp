@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="com.bfuture.app.saas.model.SysScmuser"%>
+<%@ page import="com.bfuture.app.saas.model.SysScmuser"%>
 <%
 	Object obj = session.getAttribute( "LoginUser" );
 	if( obj == null ){
