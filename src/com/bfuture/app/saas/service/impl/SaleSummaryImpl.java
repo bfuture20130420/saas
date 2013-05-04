@@ -2874,11 +2874,11 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			}
 			if (!StringUtil.isBlank(saleReport.getGsgcid())) {
 				if(!"所有类别".equals(saleReport.getGsgcid())){
-					whereStr.append(" and G.GDCATID like '").append(saleReport.getGsgcid()).append("%'");
+					whereStr.append(" and K.GDCATID like '%").append(saleReport.getGsgcid()).append("%'");
 				}
 			}
 			if (!StringUtil.isBlank(saleReport.getGsgcname())) {
-				whereStr.append(" and C.GCNAME like '%").append(saleReport.getGsgcname()).append("%'");
+				whereStr.append(" and K.GCNAME like '%").append(saleReport.getGsgcname()).append("%'");
 			}
 			if (!StringUtil.isBlank(saleReport.getStartDate())) {
 				whereStr.append(" and to_char(S.GSRQ,'yyyy-mm-dd') >= '").append(saleReport.getStartDate()).append("'");
