@@ -209,8 +209,6 @@ public class SaleSummaryImpl extends BaseManagerImpl implements SaleSummary {
 			result = this.getSaleDetail(o);	
 		}else if ("getSaleCategory".equals(actionType)) {
 			result = this.getSaleCategory(o);
-		}else if ("getSaleCategory".equals(actionType)) {
-			result = this.getSaleCategory(o);
 		}else if ("getSaleCategoryDetail".equals(actionType)) {
 			result = this.getSaleCategoryDetail(o);
 		}
