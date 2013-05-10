@@ -14,7 +14,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>好收成经销结算单查询</title>
+<title>好收成联营结算单查询</title>
 <script type="text/javascript" language="javascript">
 var ywdjNum = 0;
 var ywmxNum = 0;
@@ -117,7 +117,7 @@ function reloadgrid(){
 					startDate : $("#startDate").val(),
 					endDate : $("#endDate").val(),
 					supcode : $("#supcode").val(),
-					djType : '0'
+					djType : '2'
 				}]
 			}
 		)
@@ -357,7 +357,7 @@ function fsltj(){
 function printJSD(){
 	var billno = $('#hiddenValue').val();
     //在url中指定打印执行页面
-    var url = "3040/print_hscjxjsd.jsp?billno=" + billno;					
+    var url = "3040/print_hsclyjsd.jsp?billno=" + billno;					
 	window.open(url,'','width='+(screen.width-12)+',height='+(screen.height-80)+', top=0,left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=no,status=yes');	
 }
 
@@ -379,7 +379,7 @@ function goBack(){
 		<!-- 查询区域 -->
 		<form id="queryForm">
 			<table style="width:1000px;font-size: 12px;">
-				<tr><td colspan="8" align="left" style="color: #4574a0;">好收成经销结算单查询</td></tr>
+				<tr><td colspan="8" align="left" style="color: #4574a0;">好收成联营结算单查询</td></tr>
 				<tr>
 					<td align="right">结算单号：</td>
 					<td align="left">

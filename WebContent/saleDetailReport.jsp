@@ -89,6 +89,7 @@ a:hover {
 			        		}						
 						}
 			        },
+			        {field:'GSRQ',title:'销售日期',width:160,align:'center',sortable:true},
 			        {field:'GSBARCODE',title:'商品条码',width:160,align:'center',sortable:true},
 				    {field:'GDNAME',title:'商品名称',width:300,align:'left',sortable:true},				    
 				    {field:'GDSPEC',title:'规格',width:60,align:'center',sortable:true},
@@ -124,7 +125,6 @@ a:hover {
 				singleSelect: true,	
 				loadMsg:'加载数据...',				
 				columns:[[
-					{field:'KCRQ',title:'库存日期',width:100,align:'center',sortable:true},
 					{field:'ZSMFID',title:'门店编码',width:100,align:'center',sortable:true},
 				    {field:'SHPNAME',title:'门店名称',width:160,align:'left',sortable:true},
 				    {field:'ZSGDID',title:'商品编码',width:100,align:'center',sortable:true},
