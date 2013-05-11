@@ -75,11 +75,11 @@ $(function(){
 		columns:[[				
 			{field:'ORGNAMEALL',title:'组织名称',width:165,align:'left'},
 			{field:'DDZS',title:'订单张数',width:60,align:'center',sortable:true},
-			{field:'DHSL',title:'订货数量',width:80,align:'center',sortable:true},
-			{field:'SJSL',title:'实到数量',width:80,align:'center',sortable:true},
 			{field:'LXDDS',title:'履行订单数',width:70,align:'center',sortable:true},				
 			{field:'WQLXDDS',title:'完全履行订单数', width:90,sortable:true,align:'center'},
 			{field:'ZSDHDDS',title:'准时到货订单数',width:90,align:'center',sortable:true},
+			{field:'DHSL',title:'订货数量',width:80,align:'center',sortable:true},
+			{field:'SJSL',title:'实到数量',width:80,align:'center',sortable:true},
 			{field:'DDZXL',title:'订单执行率(%)',width:85,align:'center',sortable:true},
 			{field:'DDMZL',title:'订单满足率(%)',width:85,align:'center',sortable:true},
 			{field:'DDZSL',title:'订单准时率(%)',width:85,align:'center',sortable:true},
