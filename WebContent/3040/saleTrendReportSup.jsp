@@ -44,13 +44,12 @@ $(function(){
 					}
 				},
 				{field:'SHPCODE',title:'门店编码',width:60},			
-				{field:'SHPNAME',title:'门店名称',width:80},
+				{field:'SHPNAME',title:'门店名称',width:200},
 				{field:'GSXSSL',title:'销售数量',width:80,align:'right'},
 				{field:'GSHSJJJE',title:'进价成本',width:80,align:'right'},
 				{field:'GSXSSR',title:'销售金额',width:80,align:'right'},
 				{field:'ML',title:'毛利',width:70,align:'center',sortable:true},
-				{field:'MLL',title:'毛利率',width:70,align:'center',sortable:true},
-				{field:'ZZL',title:'周转率',width:70,align:'center',sortable:true},
+				{field:'MLL',title:'毛利率(%)',width:70,align:'center',sortable:true},
 				{field:'INFSUPID',title:'供应商编号',width:80,sortable:true},
 				{field:'INFSUPNAME',title:'供应商名称',width:223,sortable:true}
 		]],				
@@ -197,7 +196,6 @@ function searchReset(){
 						<option value='GSXSJE'>销售金额</option>
 						<option value='ML'>毛利</option>
 						<option value='MLL'>毛利率</option>
-						<option value='ZZL'>周转率</option>	
 					</select> 
 				</td> 
 				<td width="282" style="border:none;"> 

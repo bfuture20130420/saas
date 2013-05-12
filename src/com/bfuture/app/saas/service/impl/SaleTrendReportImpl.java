@@ -240,7 +240,7 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 	 * 编辑：刘波
 	 * 时间：2013-05-11
 	 * 描述：3040好收成销售趋势分析
-	 * 备注：新增毛利,毛利率以及周转率
+	 * 备注：新增毛利,毛利率
 	 */
 	public ReturnObject getSaleTrendReport3040(Object[] o){
 		ReturnObject result = new ReturnObject();
@@ -248,36 +248,43 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 		try{
 			YwGoodssale goodsale = (YwGoodssale)o[0];
 			String gsTableName="YW_GOODSSALE"+(StringUtil.isBlank(goodsale.getGssgcode())?"":goodsale.getGssgcode());
-			StringBuffer chartSql = new StringBuffer( "SELECT to_char(T.GSRQ,'YYYY-MM-DD') GSRQ,case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end SHPCODE,case when T1.SHPNAME is null then '其他' else T1.SHPNAME end SHPNAME,SUM(GSXSSL) GSXSSL,SUM(GSHSJJJE) GSHSJJJE,SUM(GSXSSR) GSXSSR,SUM(GSXSJE) GSXSJE,(SUM(GSXSJE)-SUM(GSHSJJJE))ml,round((SUM(GSXSJE)-SUM(GSHSJJJE))/(case when SUM(GSXSJE)=0 then 1 else SUM(GSXSJE) end),2)mll,sum(t3.kcje)kcje,round(SUM(GSXSJE)/(case when sum(t3.kcje) = 0 then 1 else sum(t3.kcje) end),2) zzl,T2.supid INFSUPID,T2.supname INFSUPNAME FROM ").append(gsTableName).append("  T  " );				
-			chartSql.append( " left join (select zs.zssgcode,zs.zssupid,zs.zsmfid,sum(zs.zskcje)kcje from yw_zrstock3040 zs group by zs.zssgcode,zs.zssupid,zs.zsgdid,zs.zsbarcode,zs.zsmfid) t3 on t.gssgcode = t3.zssgcode and t.gssupid=t3.zssupid and t.GSMFID = t3.zsmfid LEFT JOIN INF_SHOP T1 ON T.GSMFID=T1.SHPCODE AND T.GSSGCODE = T1.SGCODE left join inf_supinfo T2 on T2.supsgcode = T.gssgcode and T2.supid = T.gssupid WHERE 1 = 1 " );
-							
+			StringBuffer rowsSql = new StringBuffer( "SELECT to_char(T.GSRQ,'YYYY-MM-DD') GSRQ,case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end SHPCODE,case when T1.SHPNAME is null then '其他' else T1.SHPNAME end SHPNAME,SUM(GSXSSL) GSXSSL,SUM(GSHSJJJE) GSHSJJJE,SUM(GSXSSR) GSXSSR,SUM(GSXSJE) GSXSJE,(SUM(GSXSJE)-SUM(GSHSJJJE))ml,round((SUM(GSXSJE)-SUM(GSHSJJJE))*100/(case when SUM(GSXSJE)=0 then 1 else SUM(GSXSJE) end),2)mll,T2.supid INFSUPID,T2.supname INFSUPNAME FROM ").append(gsTableName).append("  T  " );				
+			rowsSql.append( "LEFT JOIN INF_SHOP T1 ON T.GSMFID=T1.SHPCODE AND T.GSSGCODE = T1.SGCODE left join inf_supinfo T2 on T2.supsgcode = T.gssgcode and T2.supid = T.gssupid " );
+			
+			StringBuffer rowsSql1 = new StringBuffer( "SELECT to_char(T.GSRQ,'YYYY-MM-DD') GSRQ,case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end SHPCODE,case when T1.SHPNAME is null then '其他' else T1.SHPNAME end SHPNAME,SUM(GSXSSL) GSXSSL,SUM(GSHSJJJE) GSHSJJJE,SUM(GSXSSR) GSXSSR,SUM(GSXSJE) GSXSJE,(SUM(GSXSJE)-SUM(GSHSJJJE))ml,round((SUM(GSXSJE)-SUM(GSHSJJJE))*100/(case when SUM(GSXSJE)=0 then 1 else SUM(GSXSJE) end),2)mll FROM ").append(gsTableName).append("  T  " );				
+			rowsSql1.append( "LEFT JOIN INF_SHOP T1 ON T.GSMFID=T1.SHPCODE AND T.GSSGCODE = T1.SGCODE left join inf_supinfo T2 on T2.supsgcode = T.gssgcode and T2.supid = T.gssupid " );
+			
+			StringBuffer whereSql = new StringBuffer(" WHERE 1 = 1 ");
 			if( !StringUtil.isBlank( goodsale.getGssupid() ) ){
-				chartSql.append( " and T.GSSUPID = '" ).append( goodsale.getGssupid() ).append("'");
+				whereSql.append( " and T.GSSUPID = '" ).append( goodsale.getGssupid() ).append("'");
 			}
 			
 			if( !StringUtil.isBlank( goodsale.getGsmfid() ) ){
-				chartSql.append( " and T.GSMFID = '" ).append( goodsale.getGsmfid() ).append("'");
+				whereSql.append( " and T.GSMFID = '" ).append( goodsale.getGsmfid() ).append("'");
 			}
 			
 			if( !StringUtil.isBlank( goodsale.getGssgcode() ) ){
-				chartSql.append( " and T.GSSGCODE = '" ).append( goodsale.getGssgcode() ).append("'");
+				whereSql.append( " and T.GSSGCODE = '" ).append( goodsale.getGssgcode() ).append("'");
 			}
 			
 			if( !StringUtil.isBlank( goodsale.getStartDate() ) ){
-				chartSql.append( " and T.GSRQ >= to_date('" + goodsale.getStartDate() + "','YYYY-MM-DD')" );
+				whereSql.append( " and T.GSRQ >= to_date('" + goodsale.getStartDate() + "','YYYY-MM-DD')" );
 			}
 			
 			if( !StringUtil.isBlank( goodsale.getEndDate() ) ){
-				chartSql.append( " and T.GSRQ <= to_date('" + goodsale.getEndDate() +"','YYYY-MM-DD')" );
+				whereSql.append( " and T.GSRQ <= to_date('" + goodsale.getEndDate() +"','YYYY-MM-DD')" );
 			}
 			
-			chartSql.append( " GROUP BY to_char(T.GSRQ,'YYYY-MM-DD'), case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end, case when T1.SHPNAME is null then '其他' else T1.SHPNAME end, T2.supid, T2.supname " );		
-						
-			if( !StringUtil.isBlank( goodsale.getSaleObject() ) ){
-				chartSql.append( " order by "+goodsale.getSaleObject());
-			}				
+			rowsSql1.append(whereSql);
+			rowsSql1.append( " GROUP BY to_char(T.GSRQ,'YYYY-MM-DD'), case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end, case when T1.SHPNAME is null then '其他' else T1.SHPNAME end " );					
+			List lstChartResult1 = dao.executeSql( rowsSql1.toString() );	
 			
-			List lstChartResult = dao.executeSql( chartSql.toString() );	
+			rowsSql.append(whereSql);
+			rowsSql.append( " GROUP BY to_char(T.GSRQ,'YYYY-MM-DD'), case when T1.SHPCODE is null then 'unknow' else T1.SHPCODE end, case when T1.SHPNAME is null then '其他' else T1.SHPNAME end, T2.supid, T2.supname " );	
+			if(!StringUtil.isBlank( goodsale.getSaleObject() ) ){
+				rowsSql.append( " order by "+goodsale.getSaleObject());
+			}
+			List lstChartResult = dao.executeSql( rowsSql.toString() );	
 			
 			// 计算合计部分开始
 			if( lstChartResult != null && lstChartResult.size() > 0 ){
@@ -291,16 +298,12 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 					gsxssr += mapGs.get( "GSXSSR" ) != null ? Double.parseDouble( mapGs.get( "GSXSSR" ).toString() ) : 0;
 					gsxsje += mapGs.get( "GSXSJE" ) != null ? Double.parseDouble( mapGs.get( "GSXSJE" ).toString() ) : 0;
 					ml += mapGs.get( "ML" ) != null ? Double.parseDouble( mapGs.get( "ML" ).toString() ) : 0;
-					kcje += mapGs.get( "KCJE" ) != null ? Double.parseDouble( mapGs.get( "KCJE" ).toString() ) : 0;
 				}
 				//毛利率
 				if(gsxsje == 0){
 					gsxsje = 1 ;
 				}
-				if(kcje == 0){
-					kcje = 1 ;
-				}
-				mll = (gsxsje - gshsjjje)/gsxsje;
+				mll = (gsxsje - gshsjjje)*100/gsxsje;
 				//周转率
 				zzl = gsxsje/kcje;
 				DecimalFormat df = new DecimalFormat("#.00");
@@ -311,18 +314,16 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 				mapSum.put( "GSXSSR", gsxssr );
 				mapSum.put( "GSXSJE", gsxsje );
 				mapSum.put( "ML", ml );
-				mapSum.put( "MLL", df.format(mll));
-				mapSum.put( "ZZL", df.format(zzl));
+				mapSum.put( "MLL", df.format(mll)+"%");
 				lstSumResult.add( mapSum );
 				
 				result.setFooter( lstSumResult );
 			}// 计算合计部分结束
 			
-			if( lstChartResult != null && lstChartResult.size() > 0 ){
-				
+			if( lstChartResult1 != null && lstChartResult1.size() > 0 ){	
 				//按门店重组数据
 				Map< String, Map<String,Map>> mapResult = new HashMap< String, Map<String,Map>>();					
-				for( Iterator<Map> itMap = lstChartResult.iterator(); itMap.hasNext(); ){
+				for( Iterator<Map> itMap = lstChartResult1.iterator(); itMap.hasNext(); ){
 					Map mapGs = itMap.next();
 					String mfid = mapGs.get( "SHPCODE" ).toString();
 					Map<String,Map> mapMFMap = null;
@@ -371,10 +372,7 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 					yaxisname = "毛利";						
 				}
 				else if( "MLL".equals( goodsale.getSaleObject() ) ){
-					yaxisname = "毛利率";
-				}
-				else if( "ZZL".equals( goodsale.getSaleObject() ) ){
-					yaxisname = "周转率";
+					yaxisname = "毛利率(%)";
 				}
 				chart.put( "yaxisname", yaxisname );
 				chart.put( "showvalues", "0" );
@@ -432,9 +430,6 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 							}
 							else if( "MLL".equals( goodsale.getSaleObject() ) ){
 								joData.put( "value", Double.parseDouble( mapGs.get("MLL") != null ? mapGs.get("MLL").toString() : "0" ) );
-							}
-							else if( "ZZL".equals( goodsale.getSaleObject() ) ){
-								joData.put( "value", Double.parseDouble( mapGs.get("ZZL") != null ? mapGs.get("ZZL").toString() : "0" ) );
 							}
 						}
 						else{
