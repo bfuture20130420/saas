@@ -14,178 +14,152 @@
 	%>
 	
 <script type="text/javascript">
-	var saleTrendReportSUPChart = null;	
-	$(function(){
-		$('#saleTrendReportSupList').datagrid({
-			width: 800,				
-			nowrap: false,
-			striped: true,				
-			url:'',
-			sortOrder: 'desc',
-			singleSelect : true,
-			remoteSort: true,
-			fitColumns:false,
-			loadMsg:'加载数据...',				
-			showFooter:true,												
-			columns:[[
+var now1 = new Date();
+now1.setDate( now1.getDate() - 7 );
+$("#startDate").val(now1.format('yyyy-MM-dd'));	
+var now2 = new Date();
+now2.setDate( now2.getDate() - 1 );
+$("#endDate").val(now2.format('yyyy-MM-dd'));
 
-					{field:'GSRQ',title:'日期',width:80,
-						formatter:function(value,rec){
-							if( value != null && value != undefined && value != '合计' )
-								return Date.parseString(value).format('yyyy-MM-dd');
-							else
-								return value;
-						}
-					},
-					{field:'SHPCODE',title:'门店编码',width:60},			
-					{field:'SHPNAME',title:'门店名称',width:80},
-					{field:'GSXSSL',title:'销售数量',width:80,align:'right'},
-					{field:'GSHSJJJE',title:'进价成本',width:80,align:'right'},
-					{field:'GSXSSR',title:'销售金额',width:80,align:'right'},
-					{field:'ML',title:'毛利',width:70,align:'center',sortable:true},
-					{field:'MLL',title:'毛利率',width:70,align:'center',sortable:true},
-					{field:'ZZL',title:'周转率',width:70,align:'center',sortable:true},
-					{field:'INFSUPID',title:'供应商编号',width:80,sortable:true},
-					{field:'INFSUPNAME',title:'供应商名称',width:223,sortable:true}
-			]],				
-			rownumbers:true,
-			onLoadSuccess:function( data ){
-				if( data.chartData ){
-					saleTrendReportSUPChart = data.chartData;
-					drawChart();
-	            }
-			}
-		});			
-	});
-	
-	function drawChart(){
-		if( saleTrendReportSUPChart != null ){
-			var chartType = "MSColumn3D.swf";
-			if( $('#chartStyle').val() == 'line' ){
-				chartType = "MSLine.swf";
-			}
-			var chart = new FusionCharts("chart/" + chartType, "saleTrendReportSUPChartId", "800", "400", "0", "0");            
-			chart.setJSONData( saleTrendReportSUPChart );
-			chart.render("saleTrendReportSUPChart");
+var saleTrendReportSUPChart = null;	
+$(function(){
+	$('#saleTrendReportSupList').datagrid({
+		width: 800,				
+		nowrap: false,
+		striped: true,				
+		url:'',
+		sortOrder: 'desc',
+		singleSelect : true,
+		remoteSort: true,
+		fitColumns:false,
+		loadMsg:'加载数据...',				
+		showFooter:true,												
+		columns:[[
+				{field:'GSRQ',title:'日期',width:80,
+					formatter:function(value,rec){
+						if( value != null && value != undefined && value != '合计' )
+							return Date.parseString(value).format('yyyy-MM-dd');
+						else
+							return value;
+					}
+				},
+				{field:'SHPCODE',title:'门店编码',width:60},			
+				{field:'SHPNAME',title:'门店名称',width:80},
+				{field:'GSXSSL',title:'销售数量',width:80,align:'right'},
+				{field:'GSHSJJJE',title:'进价成本',width:80,align:'right'},
+				{field:'GSXSSR',title:'销售金额',width:80,align:'right'},
+				{field:'ML',title:'毛利',width:70,align:'center',sortable:true},
+				{field:'MLL',title:'毛利率',width:70,align:'center',sortable:true},
+				{field:'ZZL',title:'周转率',width:70,align:'center',sortable:true},
+				{field:'INFSUPID',title:'供应商编号',width:80,sortable:true},
+				{field:'INFSUPNAME',title:'供应商名称',width:223,sortable:true}
+		]],				
+		rownumbers:true,
+		onLoadSuccess:function( data ){
+			if( data.chartData ){
+				saleTrendReportSUPChart = data.chartData;
+				drawChart();
+            }
 		}
-	}
-	
-	function clear(){
-		var now = new Date();
-		var startDate = new Date();
-		startDate.setDate( now.getDate() - 7 );
-		$('#startDate').val( startDate.format('yyyy-MM-dd') );
-		$('#endDate').val( now.format('yyyy-MM-dd') );
-	}
-	
-	function returnFirst(){
-		$( '#div1' ).show();
-		$( '#div2' ).hide(); 
-	}
-	
-	function loadAllShop( list ){
-		if( $(list).attr('isLoad') == undefined ){
-			$(list).attr('isLoad' , true );
-			$.post( 'JsonServlet',				
-				{
-					data : obj2str({		
-							ACTION_TYPE : 'datagrid',
-							ACTION_CLASS : 'com.bfuture.app.saas.model.report.Shop',
-							ACTION_MANAGER : 'shopManager',	
-							list:[{									
-								sgcode : User.sgcode
-							}]
-					})
-					
-				}, 
-				function(data){ 
-                    if(data.returnCode == '1' ){
-                    	 if( data.rows != undefined && data.rows.length > 0 ){	                    	 	
-                    	 	$.each( data.rows, function(i, n) {      
-					            var html = "<option value='" + n.SHPCODE + "'>" + n.SHPNAME + "</option>";  
-					            $(list).append(html);  
-					        });						        
-                    	 }	                    	 
-                    	 
-                    }else{ 
-                        $.messager.alert('提示','获取门店信息失败!<br>原因：' + data.returnInfo,'error');
-                    } 
-            	},
-            	'json'
-            );				
+	});			
+});
+
+function drawChart(){
+	if( saleTrendReportSUPChart != null ){
+		var chartType = "MSColumn3D.swf";
+		if( $('#chartStyle').val() == 'line' ){
+			chartType = "MSLine.swf";
 		}
+		var chart = new FusionCharts("chart/" + chartType, "saleTrendReportSUPChartId", "800", "400", "0", "0");            
+		chart.setJSONData( saleTrendReportSUPChart );
+		chart.render("saleTrendReportSUPChart");
 	}
-	
-	function exportExcel(){
-		var searchData = getFormData( 'saleTrendReportSUPSearch' );
-       	searchData['gssgcode'] = User.sgcode;    
-       	searchData['gssupid'] = User.supcode;    	
-       	searchData['sucode'] = User.sucode;
-       	searchData['isSup'] = 'Y'; 
-       	searchData['exportExcel'] = true;
-		searchData['enTitle'] = ['gsrq','shpcode','shpname','gsxssl','GSHSJJJE','GSXSJE','ML','MLL','ZZL','INFSUPID','INFSUPNAME'];
-       	searchData['cnTitle'] = ['日期','门店编码','门店名称','销售数量','进价成本','销售金额','毛利','毛利率','周转率','供应商编号','供应商名称'];
-       	searchData['sheetTitle'] = '销售趋势分析查询';
+}
+
+function clear(){
+	var now = new Date();
+	var startDate = new Date();
+	startDate.setDate( now.getDate() - 7 );
+	$('#startDate').val( startDate.format('yyyy-MM-dd') );
+	$('#endDate').val( now.format('yyyy-MM-dd') );
+}
+
+function returnFirst(){
+	$( '#div1' ).show();
+	$( '#div2' ).hide(); 
+}
+
+function loadAllShop( list ){
+	if( $(list).attr('isLoad') == undefined ){
+		$(list).attr('isLoad' , true );
 		$.post( 'JsonServlet',				
-				{
-					data :obj2str(
-						{		
-							ACTION_TYPE : 'datagrid',
-							ACTION_CLASS : 'com.bfuture.app.saas.model.report.YwGoodssale',
-							ACTION_MANAGER : 'saleTrendReport',									 
-							list:[ searchData ]
-						}
-					)						
-				}, 
-				function(data){ 
-                    if(data.returnCode == '1' ){
-                    	location.href = data.returnInfo;	                    	 
-                    }else{ 
-                        $.messager.alert('提示','导出Excel失败!<br>原因：' + data.returnInfo,'error');
-                    } 
-            	},
-            	'json'
-            );
+			{
+				data : obj2str({		
+						ACTION_TYPE : 'datagrid',
+						ACTION_CLASS : 'com.bfuture.app.saas.model.report.Shop',
+						ACTION_MANAGER : 'shopManager',	
+						list:[{									
+							sgcode : User.sgcode
+						}]
+				})
+				
+			}, 
+			function(data){ 
+                   if(data.returnCode == '1' ){
+                   	 if( data.rows != undefined && data.rows.length > 0 ){	                    	 	
+                   	 	$.each( data.rows, function(i, n) {      
+				            var html = "<option value='" + n.SHPCODE + "'>" + n.SHPNAME + "</option>";  
+				            $(list).append(html);  
+				        });						        
+                   	 }	                    	 
+                   	 
+                   }else{ 
+                       $.messager.alert('提示','获取门店信息失败!<br>原因：' + data.returnInfo,'error');
+                   } 
+           	},
+           	'json'
+           );				
 	}
+}
+
+function reloadgrid ()  {  
+      	var searchData = getFormData( 'saleTrendReportSUPSearch' );
+      	searchData['gssgcode'] = User.sgcode;    
+      	searchData['sucode'] = User.sucode;
+      	searchData['isSup'] = 'Y'; 
+      	searchData['gssupid'] = $("#gssupid").val();
+       $('#saleTrendReportSupList').datagrid('options').url = 'JsonServlet';        
+	$('#saleTrendReportSupList').datagrid('options').queryParams = {
+		data :obj2str(
+			{		
+				ACTION_TYPE : 'getSaleTrendReport3040',
+				ACTION_CLASS : 'com.bfuture.app.saas.model.report.YwGoodssale',
+				ACTION_MANAGER : 'saleTrendReport',
+				optType : 'query',
+				optContent : '查询销售趋势分析报表',		 
+				list:[	searchData	]
+			}
+		)
+	};  
 	
-	function reloadgrid ()  {  
-       	var searchData = getFormData( 'saleTrendReportSUPSearch' );
-       	searchData['gssgcode'] = User.sgcode;    
-       	searchData['sucode'] = User.sucode;
-       	searchData['isSup'] = 'Y'; 
-       	searchData['gssupid'] = $("#gssupid").val();
-        $('#saleTrendReportSupList').datagrid('options').url = 'JsonServlet';        
-		$('#saleTrendReportSupList').datagrid('options').queryParams = {
-			data :obj2str(
-				{		
-					ACTION_TYPE : 'getSaleTrendReport', // getChart datagrid
-					ACTION_CLASS : 'com.bfuture.app.saas.model.report.YwGoodssale',
-					ACTION_MANAGER : 'saleTrendReport',
-					optType : 'query',
-					optContent : '查询销售趋势分析报表',		 
-					list:[	searchData	]
-				}
-			)
-		};  
-		
-		$('#div2' ).show();			        
-		$("#saleTrendReportSupList").datagrid('reload');
-		$("#saleTrendReportSupList").datagrid('resize');
-   	}
-   	
-   	// 重置查询条件输入框
-	function searchReset(){
-		clear();
-		$('#gsmfid').val( '' ); 	// 门 店
-		$('#gssupid').val( '' ); 	// 供应商编号
-	}
+	$('#div2' ).show();			        
+	$("#saleTrendReportSupList").datagrid('reload');
+	$("#saleTrendReportSupList").datagrid('resize');
+}
+  	
+  	// 重置查询条件输入框
+function searchReset(){
+	clear();
+	$('#gsmfid').val( '' ); 	// 门 店
+	$('#gssupid').val( '' ); 	// 供应商编号
+}
 </script>
 </head>
 <body>
 	<div id="div1" title="销售趋势分析" style="padding:10px;" align="center" >
 		
 		<!-- 查询条件区域开始 -->
-		<table id="saleTrendReportSUPSearch" style="line-height:20px; text-align:left; border:none; font-size:12px" width="800px"> 
+		<table id="saleTrendReportSUPSearch" style="line-height:20px; text-align:left; border:none; font-size:12px;width:800px;"> 
 			<tr> 
 				<td colspan="3" align="left" style="border:none; color:#4574a0;">销售趋势分析</td> 
 			</tr> 
@@ -221,7 +195,7 @@
 						<option value='GSXSSL' selected="selected">销售数量</option>	
 			       		<option value='GSHSJJJE'>进价成本</option>	
 						<option value='GSXSJE'>销售金额</option>
-						<option value='ML'>毛利</option>	
+						<option value='ML'>毛利</option>
 						<option value='MLL'>毛利率</option>
 						<option value='ZZL'>周转率</option>	
 					</select> 
