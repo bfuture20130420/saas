@@ -35,7 +35,7 @@ private static final long serialVersionUID = 1L;
 		//文件太大时内存不能一次读出,要循环
 		byte a[] = new byte[filelen];
 		fileInputStream.read(a);
-		out.write(a);
+		out.write(a); 
 		}
 		fileInputStream.close();
 		out.close();
@@ -55,6 +55,6 @@ private static final long serialVersionUID = 1L;
 		out.println(" </BODY>");
 		out.println("</HTML>");
 		out.flush();
-		out.close();
+		out.close(); 
 	} 
 }

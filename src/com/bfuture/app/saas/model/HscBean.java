@@ -13,6 +13,10 @@ public class HscBean extends BaseObject implements Serializable{
 	private String endDate;
 	private String supcode;
 	private String djType;
+	private String orgcode;
+	private String catid;
+	private String ppid;
+	private String yjDays;
 	
 	public String getSgcode() {
 		return sgcode;
@@ -49,6 +53,30 @@ public class HscBean extends BaseObject implements Serializable{
 	}
 	public void setDjType(String djType) {
 		this.djType = djType;
+	}
+	public String getOrgcode() {
+		return orgcode;
+	}
+	public void setOrgcode(String orgcode) {
+		this.orgcode = orgcode;
+	}
+	public String getCatid() {
+		return catid;
+	}
+	public void setCatid(String catid) {
+		this.catid = catid;
+	}
+	public String getPpid() {
+		return ppid;
+	}
+	public void setPpid(String ppid) {
+		this.ppid = ppid;
+	}
+	public String getYjDays() {
+		return yjDays;
+	}
+	public void setYjDays(String yjDays) {
+		this.yjDays = yjDays;
 	}
 	@Override
 	public String toString() {

@@ -9,6 +9,7 @@
 	}
 	SysScmuser currUser = (SysScmuser)obj;
 	String sgcode = currUser.getSgcode();
+	String supid = currUser.getSupcode();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -75,9 +76,7 @@ $(function(){
 			},
 			{field:'HYFTOTAL',title:'含税进货金额',width:100,align:'center',sortable:true},				
 			{field:'WYFTOTAL',title:'无税进货金额', width:100,sortable:true,align:'center'},
-			{field:'JTAXTOTAL',title:'进项税额',width:100,align:'center',sortable:true},
-			{field:'SUPCODE',title:'供应商编码',width:100,align:'center',sortable:true},	
-			{field:'SUPNAME',title:'供应商名称',width:250,align:'left',sortable:true}
+			{field:'JTAXTOTAL',title:'进项税额',width:100,align:'center',sortable:true}
 		]],
 		pagination:true,
 		rownumbers:true
@@ -116,7 +115,7 @@ function reloadgrid(){
 					billno : $("#billno").val(),
 					startDate : $("#startDate").val(),
 					endDate : $("#endDate").val(),
-					supcode : $("#supcode").val(),
+					supcode : '<%=supid%>',
 					djType : '0'
 				}]
 			}
@@ -393,10 +392,8 @@ function goBack(){
 					<td align="left">
 						<input type="text" id="endDate" name="endDate" type="text" onClick="WdatePicker({isShowClear:false,readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'});"></input>
 					</td>
-					<td align="right">供应商编码：</td>
-					<td align="left">
-						<input type="text" id="supcode" name="supcode" size="20"/>
-					</td>
+					<td align="right">&nbsp;</td>
+					<td align="left">&nbsp;</td>
 				</tr>
 				<tr>
 					<td colspan="8" align="left">
