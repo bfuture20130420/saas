@@ -12,9 +12,9 @@
 		if( obj == null ){
 			response.sendRedirect( "login.jsp" );
 			return;
-		}		
+		}	       	
 		SysScmuser currUser = (SysScmuser)obj;
-%>
+%>          
 
 	<title>厂商结算通知单查询</title>	
 	<style type="text/css">   	      
@@ -25,7 +25,7 @@
 			position:'absolute';
 			z-Index:99999;
 		}
-		.over{
+		.over{   
 			border:1px solid red;			
 		}
 		.normal{
@@ -43,7 +43,7 @@
 	</style>
 	
 	<script>
-		//------------------不显示供应商
+		//------------------不显示供应商566666666666666666666 sdfsdfds   
 		$(function(){
 			if(User.sutype != 'L'){
 				$("#supcode_f").hide();	
