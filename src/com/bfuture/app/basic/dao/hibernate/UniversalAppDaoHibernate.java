@@ -702,5 +702,15 @@ public class UniversalAppDaoHibernate extends HibernateDaoSupport implements Uni
 		
 		return billCode;
 	}	
+	public int updateSql_3039(final String sql) {
+		int i=-1;
+		try {
+    		 i=getSession().createSQLQuery(sql).executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+		}	 
+		return i;
+	}
 	
 }
