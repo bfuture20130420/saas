@@ -12,9 +12,9 @@
 		if( obj == null ){
 			response.sendRedirect( "login.jsp" );
 			return;
-		}	       	
+		}		
 		SysScmuser currUser = (SysScmuser)obj;
-%>          
+%>
 
 	<title>厂商结算通知单查询</title>	
 	<style type="text/css">   	      
@@ -25,7 +25,7 @@
 			position:'absolute';
 			z-Index:99999;
 		}
-		.over{   
+		.over{
 			border:1px solid red;			
 		}
 		.normal{
@@ -43,7 +43,7 @@
 	</style>
 	
 	<script>
-		//------------------不显示供应商11111111111114444444444444
+		//------------------不显示供应商
 		$(function(){
 			if(User.sutype != 'L'){
 				$("#supcode_f").hide();	
@@ -629,7 +629,7 @@
 	</script>
 </head>
 <body>	
-	<div id="div1"  iconCls="" minimizable="false" maximizable="false"  title="厂商结算通知单查询" style="width:730px;height:150px;margin-left:320px;">
+	<div id="div1"   title="厂商结算通知单查询" style="width:800px;height:150px;margin-left: 150px" >
 		<table id="jxsettle_form" width="800" style="line-height:25px; text-align:left; border:none; font-size:12px"> 
 			<tr> 
 				<td colspan="3" align="left" style="border:none; color:#4574a0;">厂商结算通知单查询</td> 
@@ -652,7 +652,7 @@
 			<tr>
 				<td  width="250" style="border:none;"  > 
 					查 看 状 态：
-						<select style="width:155px;height:21px" name='lookstatus' id="lookstatus" size='1'  >
+						<select style="width:140px;height:18px" name='lookstatus' id="lookstatus" size='1'  >
               			<option value = ''>所有状态</option>
               			<option value ='未查看'>未查看</option>
               			<option value ='已查看'>已查看</option>
@@ -661,14 +661,14 @@
       				</select>
 				</td> 	
 				<td  width="250" style="border:none;"  > 
-					门&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;店：
-					<select style="width:155px;height:21px" name='bohmfid' id="bohmfid" size='1'  >
+					门&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;店：
+					<select style="width:140px;height:18px" name='bohmfid' id="bohmfid" size='1'  >
               			<option value = ''>所有门店</option>
       				</select>
 				</td> 	
 				<td  width="250" style="border:none;"  > 
 					单 据 状 态：
-						<select style="width:155px;height:21px" name='billstatus' id="billstatus" size='1'  >
+						<select style="width:140px;height:18px" name='billstatus' id="billstatus" size='1'  >
               			<option value = ''>所有状态</option>
               			<option value = '未审核'>未审核</option>
               			<option value = '已审核'>已审核</option>
@@ -696,11 +696,11 @@
 		</div> 
 	</div>
 
-	<div id="div2" style="width:800px;display:none;padding: 10px;margin-left: 330px;">
+	<div id="div2" style="width:800px;display:none;padding: 10px;margin-left: 150px;">
 		<table id="tab1" width="100%" height="100%">
 			<tr>
 				<td>
-					<table id="tab2" width="100%" style="line-height: 20px;text-align: left; border: none; font-size: 12px; background-color: #F5F5F5; padding: 10px;">
+					<table id="tab2" width="100%" style="line-height: 25px;text-align: left; border: none; font-size: 12px; background-color: #F5F5F5; padding: 10px;">
 						<TR>
 							<TD width="250px;">
 								<h3>购得乐超市</h3>
@@ -821,7 +821,7 @@
 									<tr style="text-decoration:underline;" >
 										<td>厂商编码</td>
 										<td>厂商名称</td>
-										<td>结算金额</td>
+										<td>实际结算金额</td>
 										<td>价款</td>
 										<td>税款</td>
 									</tr>
