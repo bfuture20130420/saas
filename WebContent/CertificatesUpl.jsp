@@ -15,7 +15,7 @@
 		if( obj == null ){
 			response.sendRedirect( "login.jsp" );
 			return;
-		}
+		} 
 		SysScmuser currUser = (SysScmuser)obj;
 	
 		// 执行图片处理操作
