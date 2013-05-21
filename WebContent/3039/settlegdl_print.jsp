@@ -19,7 +19,7 @@
 		return str == null ? "" : str.toString();
 	}
 %>
-<%
+<%  
 	final Log log = LogFactory.getLog(getClass());
 	request.setCharacterEncoding("GBK");
 	Object obj = session.getAttribute( "LoginUser" );

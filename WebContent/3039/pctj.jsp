@@ -15,7 +15,7 @@
 	String sgcode = currUser.getSgcode();
 	String suType = currUser.getSutype() + "";
 %>
-<style>
+<style>   
 	.underLine{
 		border:0px;
 		border-bottom:#000 1px solid;

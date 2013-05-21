@@ -3,7 +3,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>	
-	<title>结算补差单查询</title>
+	<title>订单信息查询</title>
 	
 <%
 	Object obj = session.getAttribute( "LoginUser" );
@@ -15,7 +15,7 @@
 	String sgcode = currUser.getSgcode();
 	String suType = currUser.getSutype() + "";
 %>
-<style>   
+<style>
 	.underLine{
 		border:0px;
 		border-bottom:#000 1px solid;
@@ -25,14 +25,14 @@
 	<script type="text/javascript">
 	var now = new Date(); 
 	now.setDate( now.getDate() - 7 );
-	$("#sdate").val( now.format('yyyy-MM-dd') );
-	$("#edate").attr("value",new Date().format('yyyy-MM-dd'));
+	$("#startDate").val( now.format('yyyy-MM-dd') );
+	$("#endDate").attr("value",new Date().format('yyyy-MM-dd'));
 		$(function(){
 			// 填充订单头列表
 			$('#orderSearchSupList').datagrid({
 				nowrap: false,
 				striped: true,			
-				width:1000,	
+				width:User.sutype=='L'?800:695,	
 				sortOrder: 'desc',
 				singleSelect : true,
 				showFooter:true,
@@ -41,47 +41,39 @@
 				idField: 'BOHBILLNO',
 				loadMsg:'加载数据...',
 				columns:[[
-				          
-				          
-//单据号		原单据号   门店     补差金额      补差日期    审核日期    供应商编码  供应商名称  备注  
-						
-						
-						
-						{field:'SHEET_NO',title:'单据号',width:185,sortable:true,
+						{field:'BOHBILLNO',title:'订单编号',width:120,sortable:true,
 							formatter:function(value,rec){
-								
-								return '<a href=javascript:void(0) style="color:#4574a0; font-weight:bold;" onclick=showOrderDet("'+rec.SHEET_NO +'","'+ rec.SHPNAME +'","'+ rec.APPROVE_DATE +'","'+ rec.SUPCUST_NO +'","'+ rec.SUPNAME +'");>' + value + '</a>';
+							var supname3=(rec.SUNAME+'').replace(/\ /g,'');
+							if(value=='合计') return value;
+							else	return '<a href=javascript:void(0) style="color:#4574a0; font-weight:bold;" onclick=showOrderDet("'+ rec.BOHBILLNO +'","'+rec.BOHMFID+'","'+rec.BOHSUPID+'","'+rec.SHPNAME+'","'+supname3+'","'+rec.BOHDHRQ+'","'+rec.BOHJHRQ+'","'+rec.BOHQXTIME+'");>' + value + '</a>';
 							}
 						},	
-						{field:'VOUCHER_NO',title:'原单据号',width:100,sortable:true},
-
-						{field:'SHPNAME',title:'门店',width:180,sortable:true},
-						{field:'INOUT_AMOUNT',title:'补差金额',width:100,sortable:true},
-						{field:'PAY_DATE',title:'补差日期',width:100,sortable:true},
-						{field:'APPROVE_DATE',title:'审核日期',width:100,sortable:true},
-						{field:'MEMO',title:'备注',width:200,sortable:true}
-						
+						{field:'BOHMFID',title:'门店编号',width:100,sortable:true},
+						{field:'SHPNAME',title:'门店名称',width:200,sortable:true},
+						{field:'BOHDHRQ',title:'订货日期',width:150,sortable:true},
+						{field:'BOHJHRQ',title:'送货期限',width:150,sortable:true},
+						{field:'SL',title:'订货数量',width:100,sortable:true},
+						{field:'JE',title:'含税进价金额',width:150,sortable:true}
 						<%if("L".equals(suType)){%>
-						,{field:'SUPCUST_NO',title:'供应商编号',width:100,sortable:true},
-						{field:'SUPNAME',title:'供应商名称',width:250,sortable:true}
+						,{field:'BOHSUPID',title:'供应商编号',width:70,sortable:true},
+						{field:'SUNAME',title:'供应商名称',width:215,sortable:true}
 						<%}%>
 						
-						
 				]],	
-//				toolbar:[{
-//					text:'导出Excel',
-//					iconCls:'icon-redo',
-//					handler:function(){
-//						exportExcel();
-//					}
-//				}],
+				toolbar:[{
+					text:'导出Excel',
+					iconCls:'icon-redo',
+					handler:function(){
+						exportExcel();
+					}
+				}],
 				pagination:true,
 				rownumbers:true
 			});
 			
 			// 填充订单明细列表
 			$('#orderDetSupList').datagrid({
-				width: 1000,
+				width: 902,
 				nowrap: false,
 				striped: true,	
 				url:'',			
@@ -92,30 +84,15 @@
 				loadMsg:'加载数据...',				
 				showFooter:true,
 				rownumbers:true,				
-				columns:[[	
-				          
-     //单据号     商品编码    商品条码   商品名称     规格     单位           包装因子      原进货价      现进货价      数量小计    差价金额
-					
-					{field:'ITEM_ID',title:'商品编码',width:100,align:'left'},
-					{field:'ITEM_NAME',title:'商品名称',width:250,align:'left'},
-					{field:'ITEM_SUBNO',title:'商品条码',width:100,align:'left'},
-					{field:'ITEM_SIZE',title:'商品规格',width:70,align:'left'},
-
-					{field:'UNIT_FACTOR',title:'包装因子',width:50,align:'left'},
-
-					
-					
-					{field:'UNIT_NO',title:'单位',width:70,align:'left'},
-					
-					{field:'IN_PRICE',title:'原进货价',width:60,align:'left'}, 
-				    
-					{field:'VALID_PRICE',title:'现进货价',width:100,align:'left'},
-					{field:'TOTAL_QTY',title:'数量小计',width:81,align:'left'},
-					{field:'SUB_AMOUNT',title:'差价金额',width:81,align:'left'}	
-     
-     
-     
-     
+				columns:[[	   
+					{field:'GDNAME',title:'商品名称',width:293,align:'left'},
+					{field:'GDBARCODE',title:'商品条码',width:100,align:'left'},
+					{field:'GDSPEC',title:'商品规格',width:70,align:'left'},
+					{field:'TEMP1',title:'档案因子',width:150,align:'left'},
+					{field:'GDUNIT',title:'单位',width:70,align:'left'},
+					{field:'BODSL',title:'订货数量',width:60,align:'left'}, 
+					{field:'BODHSJJ',title:'含税进价',width:70,align:'left'},
+					{field:'BODHSJJJE',title:'含税进价金额',width:77,align:'left'}		
 				]]
 			});
 		});
@@ -165,20 +142,19 @@
 	            );
 		} 
 
-		// 加载订单头列表1111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+		// 加载订单头列表
 		function reloadgrid()  { 
         	var searchData = getFormData( 'orderSearchHTSearch' ); 
-			searchData['sucode'] = $('#bohsupid').val();  		// 供应商编码
-			searchData['sgcode'] = User.sgcode;  // 实例编码
-			searchData['flag'] = 'K';  // 调用方法
+			searchData['bohsupid'] = $('#bohsupid').val();  		// 供应商编码
+			searchData['bohsgcode'] = User.sgcode;  // 实例编码
 	        //查询参数直接添加在queryParams中
 	        $('#orderSearchSupList').datagrid('options').url = 'JsonServlet';        
 			$('#orderSearchSupList').datagrid('options').queryParams = {
 				data :obj2str(
 					{		
-						ACTION_TYPE : 'serchJSBXHead',
-						ACTION_CLASS : 'com.bfuture.app.saas.model.report.BillHead',
-						ACTION_MANAGER : 'settleManagerGdl',		
+						ACTION_TYPE : 'SearchYwBorderhead',
+						ACTION_CLASS : 'com.bfuture.app.saas.model.YwBorderhead',
+						ACTION_MANAGER : 'ywBorderhead',
 						optType : 'query',
 						optContent : '查询订单',			 
 						list:[	searchData	]
@@ -190,26 +166,37 @@
 			$("#orderSearchSupList").datagrid('resize');   
     	}
     	
-    	// 钻去订单明细的方法222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-		function showOrderDet( sheet_no,SHPNAME,APPROVE_DATE,SUPCUST_NO,SUPNAME){
-			$('#bohbillno_').empty().append(sheet_no); // 订单编号
-			$('#bohsupid_').empty().append(SUPCUST_NO);	// 供应商编号
-			$('#bohsupid_').append(SUPNAME);				// 供应商名称
-			$('#bohdhrq_').empty().append(APPROVE_DATE); // 订货日期
-			$('#bohmfid_').empty().append(SHPNAME);				// 收货门店名称
-		//	$('#memo_').empty().append(MEMO);				// 收货门店名称	
+    	// 钻去订单明细的方法
+		function showOrderDet( bohbillc,shopid ,BOHSUPID,SHPNAME,SUNAME,dhrq,jhrq,qxrq){
+			if(jhrq=="null"){
+				jhrq="";
+			}
+			var data;
+			$('#bohbillno_').empty().append(bohbillc); // 订单编号
+			$('#bohsupid_').empty().append(BOHSUPID);	// 供应商编号
+			$('#bohsupid_').append(SUNAME);				// 供应商名称
+			$('#bohdhrq_').empty().append(dhrq); // 订货日期
+			$('#bohjhrq_').empty().append(jhrq);	// 送货日期
+			$('#bohqxrq_').empty().append(qxrq );	// 有效日期
+			$('#bohmfid_').empty().append(shopid);		// 收货门店编号
+			$('#bohmfid_').append(SHPNAME);				// 收货门店名称
 			
+			// 填充隐藏域(打印用)
+			$('#bohbillno_hidden').val(bohbillc);
+			$('#bohmfid_hidden').val(shopid);
+					
 	        //查询参数直接添加在queryParams中
 	        $('#orderDetSupList').datagrid('options').url = 'JsonServlet';        
 			$('#orderDetSupList').datagrid('options').queryParams = {
 				data :obj2str(
 					{		
-						ACTION_TYPE : 'serchJSBXDet',
-						ACTION_CLASS : 'com.bfuture.app.saas.model.report.BillHead',
-						ACTION_MANAGER : 'settleManagerGdl',		 
+						ACTION_TYPE : 'SearchYwBorderdet',
+						ACTION_CLASS : 'com.bfuture.app.saas.model.YwBorderdet',
+						ACTION_MANAGER : 'ywBorderdet',		 
 						list:[{
-							billno : sheet_no,
-							sgcode : User.sgcode
+							bodbillno : bohbillc,
+							bodsgcode : User.sgcode,
+							bodshmfid :shopid
 						}]
 					}
 				)
@@ -266,7 +253,7 @@
 					var bodbillno = $('#bohbillno_hidden').val(); 	 // 订单编号
 					var bodshmfid = $('#bohmfid_hidden').val(); 	 // 门店编号
 	                //在url中指定打印执行页面
-	                var url = "print_order.jsp?bodsgcode=" + bodsgcode + "&bodbillno=" + bodbillno + "&bodshmfid=" + bodshmfid;					
+	                var url = "3039/print_order_3039.jsp?bodsgcode=" + bodsgcode + "&bodbillno=" + bodbillno + "&bodshmfid=" + bodshmfid;					
 					window.open(url,'','width='+(screen.width-12)+',height='+(screen.height-80)+', top=0,left=0, toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes,location=no,status=yes');	
 				}
 			});
@@ -310,15 +297,15 @@
 <center>
 <table id="orderSearchHTSearch" style="line-height:20px;border:none; font-size:12px;margin:auto;width:1000px;" align="center"> 
 	<tr> 
-		<td colspan="6" align="left" style="border:none; color:#4574a0;">结算补差单查询</td> 
+		<td colspan="6" align="left" style="border:none; color:#4574a0;">订单信息查询</td> 
 	</tr>
 	<tr>
-		<td align="right" width="100">单据编号：</td>
-		<td align="left" width="230"><input type="text" name="billno" id="billno" value="" width="110" /> </td>
+		<td align="right" width="100">订单编号：</td>
+		<td align="left" width="230"><input type="text" name="bohbillno" id="bohbillno" value="" width="110" /> </td>
 		<td align="right" width="100">开始日期：</td>
-		<td align="left" width="230"><input type="text" name="sdate" id="sdate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,maxDate:'#F{$dp.$D(\'edate\')}'});" /> </td>
+		<td align="left" width="230"><input type="text" name="startDate" id="startDate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'});" /> </td>
 		<td align="right" width="100">结束日期：</td>
-		<td align="left" width="240"><input type="text" name="edate" id="edate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,minDate:'#F{$dp.$D(\'sdate\')}',maxDate:'%y-%M-%d'});" /> </td>
+		<td align="left" width="240"><input type="text" name="endDate" id="endDate" value="" size="20"  onClick="WdatePicker({isShowClear:false,readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'});" /> </td>
 	</tr> 
 	<tr>
 		<td align="right" width="100">门店名称：</td>
@@ -353,32 +340,32 @@
 	
 <!-- 第二个页面 详细页 开始 display:none;-->		
 <!-- (2)详细区开始 -->
-<table id="orderDetHT" width="100" style="line-height:20px;border:none;font-size: 12;display: none" align="center"> 
-   <tr><td colspan='6' ><div style=" height: 20px"></div></td></tr>
-   <tr><th colspan="6" style="align:center;font-size:24px;">结算补差单明细</th></tr>
-         <tr><td colspan='6' ><div style=" height: 20px"></div></td></tr>
-   
- <tr>
-     <td width="100" align="right">单据编号：</td>
+<table id="orderDetHT" width="100" style="line-height:20px;border:none;font-size: 12;display: none" align="center">
+   <tr><th colspan="6" style="align:center;font-size:24px;">订单明细</th></tr>
+   <tr>
+     <td width="100" align="right">订单编号：</td>
      <td width="230" align="left"><span id="bohbillno_"></span></td>
-     <td width="100" align="right">审核日期：</td> 
-     <td width="230" align="left"  colspan="3"><span id="bohdhrq_"></span></td>
-
+     <td width="100" align="right">订货日期：</td> 
+     <td width="230" align="left"><span id="bohdhrq_"></span></td>
+   		  <%if(sgcode.equals("3039")){%>
+     <td width="100" align="right">送货期限：</td>
+		<%} else {%>
+     <td width="100" align="right">送货日期：</td>
+		<%}%>
+     <td width="230" align="left"><span id="bohjhrq_"></span></td>
    </tr>
    <tr>
-     <td width="100" align="right">门&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;店：</td>
+     <td width="100" align="right">收货门店：</td>
      <td width="230" align="left"><span id="bohmfid_"></span></td>
-     <td width="100" align="right">供&nbsp;应&nbsp;商：</td>
+     <td width="100" align="right">供应商：</td>
      <td width="570" align="left" colspan="3"><span id="bohsupid_"></span></td>
-   </tr>   
-
-   
-   
-   
+   </tr>
    <tr><td colspan="6"><table id="orderDetSupList"></table></td></tr>
    <tr>
       <td colspan="3" style="border:none;">	
-		<a href="javascript:void(0);"><img src="images/goback.jpg" border="0" onclick="returnFirst();"/></a>		
+		<a href="javascript:void(0);"><img src="images/goback.jpg" border="0" onclick="returnFirst();"/></a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);"><img src="images/print.jpg" border="0" onclick="printOrder();"/></a>			
       </td>
    </tr>
 </table>

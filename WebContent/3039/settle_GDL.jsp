@@ -307,7 +307,8 @@
 			$('#cMoney').empty().text( chineseMoney );	
 			$("#lMoney").empty().text(SETTLEAMT);
         	//根据审核状态确定是否显示：同意：不同意：按钮
-        	if(data.APPROVE_FLAG=='已审核'){
+        	var APPROVE_FLAG=data.APPROVE_FLAG;
+        	if(APPROVE_FLAG=='已审核'){
         		$("#yesbt").hide();
         		$("#nobt").hide();
         	}

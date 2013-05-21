@@ -38,6 +38,10 @@ public class SettleManagerGdlImpl extends BaseManagerImpl
         	result=searchSettlekxdet(o);
         }else if("uplookstatus".equals(actionType)){
         	result=uplookstatus(o);
+        }else if("serchJSBXHead".equals(actionType)){
+        	result=serchJSBXHead(o);
+        }else if("serchJSBXDet".equals(actionType)){
+        	result=serchJSBXDet(o);
         }
         
         return result;
@@ -83,11 +87,11 @@ public class SettleManagerGdlImpl extends BaseManagerImpl
        
             
         	StringBuffer sql =  new StringBuffer("select yb.JSHSGCODE,yb.sheet_no,sp.shpname,yb.saleway,yb.contract,yb.ymtime,yb.oper_name,to_char(yb.oper_date,'yyyy-mm-dd ') oper_date, yb.approve_name,to_char(yb.approve_date,'yyyy-mm-dd') approve_date,yb.notaxamt,  yb.taxamt,yb.amt,yb.initamt,yb.needamt,yb.settleamt,yb.balanceamt,yb.totdeduct_amt,yb.supcust_no,yb.sup_name,yb.memo,yb.approve_flag,  nvl(ls.look_status,'未查看' ) look_status ,to_char(yb.STARTTIME,'yyyy-mm-dd') STARTTIME, to_char(yb.ENDTIME,'yyyy-mm-dd') ENDTIME ");
-        	sql.append(" from yw_gdl_jshd yb left join inf_shop sp on yb.shpno=sp.shpcode left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no  ");        
+        	sql.append(" from yw_gdl_jshd yb left join inf_shop sp on yb.shpno=sp.shpcode and yb.jshsgcode=sp.sgcode  left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no  ");        
 
-            StringBuffer countSql = new StringBuffer("select count(*) from yw_gdl_jshd  yb   left join inf_shop sp on yb.shpno=sp.shpcode left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no ");
+            StringBuffer countSql = new StringBuffer("select count(*) from yw_gdl_jshd  yb   left join inf_shop sp on yb.shpno=sp.shpcode  and yb.jshsgcode=sp.sgcode  left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no ");
 
-            StringBuffer sumSql =  new StringBuffer("select cast('\u5408\u8BA1' as varchar2(32)) sheet_no, sum(notaxamt)notaxamt,sum(taxamt)taxamt,sum(amt )amt ,sum(initamt )initamt ,sum(needamt)needamt,sum( settleamt)settleamt ,sum(balanceamt) balanceamt,sum(totdeduct_amt)totdeduct_amt from yw_gdl_jshd  yb  left join inf_shop sp on yb.shpno=sp.shpcode left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no  ");
+            StringBuffer sumSql =  new StringBuffer("select cast('\u5408\u8BA1' as varchar2(32)) sheet_no, sum(notaxamt)notaxamt,sum(taxamt)taxamt,sum(amt )amt ,sum(initamt )initamt ,sum(needamt)needamt,sum( settleamt)settleamt ,sum(balanceamt) balanceamt,sum(totdeduct_amt)totdeduct_amt from yw_gdl_jshd  yb  left join inf_shop sp on yb.shpno=sp.shpcode  and yb.jshsgcode=sp.sgcode  left join yw_lookstatus_3039 ls on yb.jshsgcode=ls.sgcode  and yb.sheet_no=ls.sheet_no  ");
           
             
             /*查询条件*/   
@@ -359,6 +363,161 @@ public ReturnObject   uplookstatus(Object o[])
     catch(Exception ex)
     {
         log.error((new StringBuilder("YwBorderheadManagerImpl.uplookstatus() error:")).append(ex.getMessage()).toString());
+        result.setReturnCode("0");
+        result.setReturnInfo(ex.getMessage());
+        ex.printStackTrace();
+    }
+    return result;
+}
+public ReturnObject serchJSBXHead(Object o[])
+
+
+{	
+    ReturnObject result = new ReturnObject();
+
+    try
+    {
+    	BillHead yb = (BillHead)o[0];
+    	String flag=yb.getFlag();
+        int limit = yb.getRows();
+        int start = (yb.getPage() - 1) * yb.getRows();
+        StringBuffer sql =new StringBuffer("");
+        StringBuffer countSql =new StringBuffer("");
+        StringBuffer sumSql=new StringBuffer("");
+        if("K".equalsIgnoreCase(flag)){
+        	sql =  new StringBuffer("select YB.SHEET_no ,YB.VOUCHER_NO,B.SHPNAME, YB.inout_amount, to_char(YB.pay_date,'yyyy-MM-dd')pay_date, to_char(YB.approve_date,'yyyy-MM-dd')approve_date,  YB.memo,YB.supcust_no,A.supname from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where sheet_no like 'KJ%' ");
+            countSql = new StringBuffer("select count(*) from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where yb.sheet_no like 'KJ%' ");
+
+            sumSql =  new StringBuffer("select cast('\u5408\u8BA1' as varchar2(32)) sheet_no, sum(YB.inout_amount)inout_amount from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where sheet_no like 'KJ%'  ");
+          
+        }
+        if("P".equalsIgnoreCase(flag)){
+        	sql =  new StringBuffer("select YB.SHEET_no ,YB.VOUCHER_NO,B.SHPNAME, YB.inout_amount, to_char(YB.pay_date,'yyyy-MM-dd')pay_date, to_char(YB.approve_date,'yyyy-MM-dd')approve_date,  YB.memo,YB.supcust_no,A.supname from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where sheet_no like 'PJ%' ");
+
+            countSql = new StringBuffer("select count(*) from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where yb.sheet_no like 'PJ%' ");
+
+            sumSql =  new StringBuffer("select cast('\u5408\u8BA1' as varchar2(32)) sheet_no, sum(YB.inout_amount)inout_amount from changebillhead3039 yb   LEFT JOIN inf_supinfo A on yb.supcust_no= A.supid and yb.sgcode=A.supsgcode left join inf_shop B on yb.branch_No=B.shpcode and yb.sgcode=B.sgcode   where sheet_no like 'PJ%'  ");
+          
+        }
+
+
+        
+        /*查询条件*/   
+        StringBuffer whereStr = new StringBuffer("").append(" and yb.sgcode='").append(yb.getSgcode()).append("' ");
+        if(!StringUtil.isBlank(yb.getBillno())){
+        	System.out.println(yb.getBillno()+"tttttttttttttttttttttttttttttttttttttttttttt");
+        	whereStr.append(" and yb.sheet_no = '").append(yb.getBillno()).append("'");
+        }   
+    	if(!StringUtil.isBlank(yb.getSucode())){
+    		whereStr.append(" and yb.supcust_no = '").append(yb.getSucode()).append("'");
+    	}
+    	if(!StringUtil.isBlank(yb.getSdate()))
+    		whereStr.append(" and to_char(yb.approve_date,'yyyy-mm-dd') >='").append(yb.getSdate()).append("'");
+        if(!StringUtil.isBlank(yb.getEdate()))
+        	whereStr.append(" and to_char(yb.approve_date,'yyyy-mm-dd') <= '").append(yb.getEdate()).append("'");
+        if(!StringUtil.isBlank(yb.getBohmfid()))
+        	whereStr.append(" and yb.branch_no = '").append(yb.getBohmfid()).append("'");
+       
+  
+        
+        List lstResult=null;
+        /*总条数,合计查询*/
+        countSql.append(whereStr);
+        lstResult = dao.executeSql(countSql.toString());
+        if(lstResult != null){
+        	 result.setTotal(Integer.parseInt(((Map)lstResult.get(0)).get("COUNT(*)").toString()));
+        } 
+        sumSql.append(whereStr);
+        lstResult = dao.executeSql(sumSql.toString());
+        if(lstResult != null){
+        	result.setFooter(lstResult);
+        }
+        
+        /*分页查询*/
+        if(yb.getOrder() != null && yb.getSort() != null){
+        	whereStr.append(" order by "+yb.getSort()).append(" ").append(yb.getOrder());
+        }else{
+        	whereStr.append(" order by yb.approve_date ");
+        }
+        sql.append(whereStr);
+        lstResult = dao.executeSql(sql.toString(), start,limit);
+        log.info((new StringBuilder("lstResult 2 :")).append(lstResult).toString());
+        log.info((new StringBuilder("lstResult.size() 2 :")).append(lstResult.size()).toString());
+        if(lstResult != null)
+        {
+            result.setReturnCode("1");
+            result.setRows(lstResult);
+        }
+    }
+    catch(Exception ex)
+    {
+        log.error((new StringBuilder("SettleManagerGdlImpl.serchJSBXHead() error:")).append(ex.getMessage()).toString());
+        result.setReturnCode("0");
+        result.setReturnInfo(ex.getMessage());
+        ex.printStackTrace();
+    }
+    return result;
+}
+public ReturnObject serchJSBXDet(Object o[])
+
+
+{	
+    ReturnObject result = new ReturnObject();
+
+    try
+    {
+    	BillHead yb = (BillHead)o[0];
+        int limit = yb.getRows();
+        int start = (yb.getPage() - 1) * yb.getRows();
+        
+   
+        
+    	StringBuffer sql =  new StringBuffer(" select yb.sgcode,yb.sheet_no, yb.item_id, yb.item_subno, yb.item_name, yb.item_size, yb.unit_no, yb.unit_factor, yb.in_price, yb.valid_price, yb.total_qty, yb.sub_amount  from changebilldet3039  yb left join changebillhead3039 A on yb.sheet_no=A.sheet_No ");
+      
+    	StringBuffer countSql = new StringBuffer(" select count(*)  from changebilldet3039  yb left join changebillhead3039 A on yb.sheet_no=A.sheet_No  ");
+
+        StringBuffer sumSql =  new StringBuffer("select cast('\u5408\u8BA1' as varchar2(32)) sheet_no, sum( yb.in_price)in_price,sum( yb.valid_price)valid_price, sum(yb.total_qty)total_qty, sum(yb.sub_amount)sub_amount  from changebilldet3039  yb left join changebillhead3039 A on yb.sheet_no=A.sheet_No   ");
+      
+        
+        /*查询条件*/   
+        StringBuffer whereStr = new StringBuffer("").append(" where 1=1 and YB.sgcode='").append(yb.getSgcode()).append("' ");
+        if(!StringUtil.isBlank(yb.getBillno())){
+        	whereStr.append(" and yb.sheet_no = '").append(yb.getBillno()).append("'");
+        }   
+    
+        
+        List lstResult=null;
+        /*总条数,合计查询*/
+        countSql.append(whereStr);
+        lstResult = dao.executeSql(countSql.toString());
+        if(lstResult != null){
+        	 result.setTotal(Integer.parseInt(((Map)lstResult.get(0)).get("COUNT(*)").toString()));
+        } 
+        sumSql.append(whereStr);
+        lstResult = dao.executeSql(sumSql.toString());
+        if(lstResult != null){
+        	result.setFooter(lstResult);
+        }
+        
+        /*分页查询*/
+        if(yb.getOrder() != null && yb.getSort() != null){
+        	whereStr.append(" order by "+yb.getSort()).append(" ").append(yb.getOrder());
+        }else{
+        	whereStr.append(" order by yb.sheet_no ");
+        }
+        sql.append(whereStr);
+        lstResult = dao.executeSql(sql.toString(), start,limit);
+        log.info((new StringBuilder("lstResult 2 :")).append(lstResult).toString());
+        log.info((new StringBuilder("lstResult.size() 2 :")).append(lstResult.size()).toString());
+        if(lstResult != null)
+        {
+            result.setReturnCode("1");
+            result.setRows(lstResult);
+        }
+    }
+    catch(Exception ex)
+    {
+        log.error((new StringBuilder("SettleManagerGdlImpl.serchJSBXDet() error:")).append(ex.getMessage()).toString());
         result.setReturnCode("0");
         result.setReturnInfo(ex.getMessage());
         ex.printStackTrace();

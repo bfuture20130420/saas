@@ -106,7 +106,7 @@ public class TCDocQueryManagerImpl extends BaseManagerImpl
     	ReturnObject result = new ReturnObject();
         try
         {   
-        	StringBuffer Sql = new StringBuffer("select A.btdgdid,A.btdbarcode,B.Gdname,B.Gdspec,B.Gdunit,A.btdsl,A.btdhsjj,A.btdhsjjje from yw_btcddet A left join inf_goods B on a.btdsgcode = b.gdsgcode and a.btdgdid = b.gdid and a.btdbarcode = b.gdbarcode ");
+        	StringBuffer Sql = new StringBuffer("select A.btdgdid,A.btdbarcode,B.Gdname,B.Gdspec,B.Gdunit,A.btdsl,A.btdhsjj,A.btdhsjjje ,A.temp1  from yw_btcddet A left join inf_goods B on a.btdsgcode = b.gdsgcode and a.btdgdid = b.gdid and a.btdbarcode = b.gdbarcode ");
         	StringBuffer sumsql = new StringBuffer("select cast('\u5408\u8BA1' as varchar2(30)) btdgdid,sum(A.btdsl)btdsl,sum(A.btdhsjjje)btdhsjjje from yw_btcddet A ");             	
         	StringBuffer count =  new StringBuffer("select count(A.btdgdid) from yw_btcddet A ");
         	if("3037".equals(tCDocQuery.getSgcode())){

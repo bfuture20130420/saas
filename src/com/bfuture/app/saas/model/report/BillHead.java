@@ -4,6 +4,7 @@ import com.bfuture.app.basic.model.BaseObject;
 import java.io.Serializable;
 
 public class BillHead extends BaseObject
+	//3039>>>>>>>>
     implements Serializable
 {
 

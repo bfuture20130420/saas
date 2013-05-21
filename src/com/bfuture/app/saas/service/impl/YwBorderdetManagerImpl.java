@@ -78,8 +78,10 @@ public class YwBorderdetManagerImpl extends BaseManagerImpl implements YwBorderd
 			}
 			
 			/*明细查询*/
-			if(yb.getOrder() != null && yb.getSort() != null){
+			if((yb.getBodsgcode().equalsIgnoreCase("3039"))&&yb.getOrder() != null && yb.getSort() != null){
             	whereStr.append(" order by "+yb.getSort()).append(" ").append(yb.getOrder());
+            }else if(yb.getBodsgcode().equalsIgnoreCase("3039")){
+            	whereStr.append(" order by yb.BODORDERID  ");
             }
 			sql.append(whereStr);
 			lstResult = dao.executeSql( sql.toString());

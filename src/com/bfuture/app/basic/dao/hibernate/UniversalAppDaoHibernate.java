@@ -704,7 +704,7 @@ public class UniversalAppDaoHibernate extends HibernateDaoSupport implements Uni
 	}	
 	public int updateSql_3039(final String sql) {
 		int i=-1;
-		try {
+		try {  
     		 i=getSession().createSQLQuery(sql).executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();

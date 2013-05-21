@@ -456,6 +456,10 @@ public class SysScmuserManagerImpl extends BaseManagerImpl implements
 				result.setReturnCode( Constants.ERROR_FLAG );
 				result.setReturnInfo( e.getMessage() );
 			}
+		}else if("getBatchOpenUserBySearch".equals( actionType) ){
+			result=getBatchOpenUserBySearch(o);
+		}else if("exportExcel".equals( actionType) ){
+			result=exportExcel(o);
 		}
 		
 		return result;
@@ -726,6 +730,78 @@ public class SysScmuserManagerImpl extends BaseManagerImpl implements
 		}else{ 
 			return false; //供应商用户试用期后不可用
 		}
+	}
+	public ReturnObject getBatchOpenUserBySearch( Object[] o) {
+		ReturnObject result = new ReturnObject();
+		try {
+			SysScmuser user = (SysScmuser)o[0];
+			String sql = "select supsgcode sgcode,supsgcode || supid sucode,supname suname,supid,supadd address,'S' sutype,'N' suenable ,'' salemethod,"
+				       + "supfax fax,'' linkman,'' linkmantel,'' sumemo from inf_supinfo s where supsgcode='"+user.getSgcode()+"'";
+			StringBuilder sql2=new StringBuilder("");;
+			if( !StringUtil.isBlank( user.getSupcode()) ){
+				sql2.append( " and supid like '%" ).append( user.getSupcode() ).append("%'");
+			}	
+			if( !StringUtil.isBlank( user.getSuname() ) ){
+				sql2.append( " and supname like '%" ).append( user.getSuname() ).append("%'");
+			}
+			String sql3=" and not exists "
+				       + "(select * from sys_scmuser u where sutype ='S' and sgcode='"+user.getSgcode()+"' and rtrim(ltrim(s.supid)) = rtrim(ltrim(u.supcode)))";
+			sql=sql+sql2.toString()+sql3;
+			int limit = user.getRows();
+			int start = ( user.getPage() - 1) * user.getRows() ;
+			List lstResult = dao.executeSql( sql, start, limit );
+			List rowNum = dao.executeSql(sql);
+			System.out.println(lstResult.get(0));
+			if( lstResult != null ){
+				result.setReturnCode( Constants.SUCCESS_FLAG );
+				result.setRows( lstResult );
+				result.setTotal(rowNum.size());
+			}
+			return result;
+		} catch (Exception e) {
+			result.setReturnCode( Constants.ERROR_FLAG );
+			result.setReturnInfo( e.getMessage() );
+		}
+		return result;
+	}
+	public ReturnObject exportExcel( Object[] o) {
+
+		ReturnObject result = new ReturnObject();
+		try{
+			SysScmuser user = (SysScmuser)o[0];
+//			String sql="select a.sucode,a.suname,case a.sutype when 'L' then '零售商' when 'S' then '供应商'  else '其他'  end  as sutype ,case suenable  when 'Y' THEN '启用' WHEN 'N' THEN  '未启用' ELSE '其他' END AS SUENABLE ,b.supadd,'' as saleway, b.supfax,b.supcont,b.supcontphone,memo  " +
+//					"  from sys_scmuser  a left join inf_supinfo b on  a.sgcode=b.supsgcode where a.sgcode= '"+user.getSgcode()+"'";
+
+			
+		String sql=							
+				"select a.sucode,a.suname,case a.sutype when 'L' then '零售商' when 'S' then '供应商'  else '其他'  end  as sutype ,case suenable  when 'Y' THEN '启用' WHEN 'N' THEN  '未启用' ELSE '其他' END AS SUENABLE ,b.supadd as ADDRESS,'' as SALEMETHOD, b.supfax as fax,b.supcont as LINKMAN ,b.supcontphone as LINKMANTEL ,memo as sumemo " +
+				"  from sys_scmuser  a left join inf_supinfo b on  a.sgcode=b.supsgcode and  a.supcode = b.supid  where a.sgcode= '"+user.getSgcode()+"'";
+									
+//			String sql=							
+//			"select a.sucode,a.suname,b.supadd , b.supfax ,b.supcont ,b.supcontphone,memo " +
+//			"  from sys_scmuser  a left join inf_supinfo b on  a.sgcode=b.supsgcode  and a.supcode = b.supid   where  a.sgcode= '"+user.getSgcode()+"'";
+					
+			
+			List users=null;
+		  
+		        users=dao.executeSql(sql);
+		    	
+		    	if(users!=null){
+		    		result.setRows(users);
+		        	result.setReturnCode("1");
+		        }else{
+		        	result.setReturnCode("0");
+		        }
+		            
+
+		    }
+		    catch(Exception ex)
+		    {
+		        log.error((new StringBuilder("exportExcel error:")).append(ex.getMessage()).toString());
+		        result.setReturnCode("0");
+		        result.setReturnInfo(ex.getMessage());
+		    }
+		    return result;
 	}
 	
 	

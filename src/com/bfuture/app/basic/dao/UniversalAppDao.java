@@ -169,5 +169,5 @@ public interface UniversalAppDao {
 			final int maxRow) throws SQLException;
 	
 	public String getBillCode(final String type) throws SQLException;
-	public int updateSql_3039(final String sql);
+	public int updateSql_3039(final String sql);   
 }
