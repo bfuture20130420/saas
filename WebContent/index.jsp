@@ -32,26 +32,12 @@
 		var isLoadData = false;
 		
 		var mainLogoMapping = {
-			'3001' : '3001logo.jpg',
-			'3008' : '3008logo.jpg',
-			'3029' : 'hcyg_logo_1.jpg',
-			'3020' : 'bb_logo_2.jpg',
-			'3019' : '3019logo.jpg',
-			'3022' : '3022logo.jpg',
-			'3023' : '3023logo.jpg'
+			'3040' : '3040logo.jpg'
 			
 		};
 		
 		var bodyLogoMapping = {
-			'3001' : '3001main.jpg',
-			'3008' : '3008main.jpg',
-			'3009' : 'jm_logo.png',
-			'3029' : 'hcyg_logo.jpg',
-			'3020' : 'bb_logo_1.jpg',
-			'3019' : '3019main.jpg',
-			'3022' : '3022main.jpg',
-			'3023' : '3023main.jpg',
-			'3024' : 'pic_ylb2.jpg'
+			'3040' : '3040main.jpg'
 		};
 		//存放一品多码实例
 		var ypdmobj=['3021'];	
