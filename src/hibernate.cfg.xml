@@ -15,7 +15,7 @@
 		<property name="hibernate.connection.username">scmuser</property>
 		<property name="hibernate.connection.password">scmusering</property>
 
-		<property name="hibernate.default_schema">SCMUSER2</property>
+		<property name="hibernate.default_schema">SCMUSER</property>
 		<property name="dialect">org.hibernate.dialect.OracleDialect</property>
 		<mapping class="com.bfuture.app.saas.model.SysSurl"/>			
 		<mapping class="com.bfuture.app.saas.model.SysRole"/>		
