@@ -17,6 +17,8 @@ public class HscBean extends BaseObject implements Serializable{
 	private String catid;
 	private String ppid;
 	private String yjDays;
+	private String validDate;
+	private String uploadFile;
 	
 	public String getSgcode() {
 		return sgcode;
@@ -77,6 +79,18 @@ public class HscBean extends BaseObject implements Serializable{
 	}
 	public void setYjDays(String yjDays) {
 		this.yjDays = yjDays;
+	}
+	public String getValidDate() {
+		return validDate;
+	}
+	public void setValidDate(String validDate) {
+		this.validDate = validDate;
+	}
+	public String getUploadFile() {
+		return uploadFile;
+	}
+	public void setUploadFile(String uploadFile) {
+		this.uploadFile = uploadFile;
 	}
 	@Override
 	public String toString() {

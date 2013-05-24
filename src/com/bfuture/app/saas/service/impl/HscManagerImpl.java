@@ -1,6 +1,7 @@
 package com.bfuture.app.saas.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.bfuture.app.basic.Constants;
 import com.bfuture.app.basic.model.ReturnObject;
@@ -37,6 +38,12 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 			return result;
 		}else if("getHSCDDMZL".equals(actionType)){//好收成订单满足率
 			result = this.getHSCDDMZL(result, o);
+			return result;
+		}else if("saveHSCLSSSPCXSQ".equals(actionType)){
+			result = this.saveHSCLSSSPCXSQ(result, o);
+			return result;
+		}else if("getHSCLSSSPCXSQ".equals(actionType)){
+			result = this.getHSCLSSSPCXSQ(result, o);
 			return result;
 		}
 		return result;
@@ -364,6 +371,60 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 			result.setFooter(sumList);
 			result.setReturnCode(Constants.SUCCESS_FLAG);
 		} catch (Exception e){
+			result.setReturnCode(Constants.ERROR_FLAG);
+		}
+		return result;
+	}
+	
+	public ReturnObject saveHSCLSSSPCXSQ(ReturnObject result ,Object[] o){
+		try {
+			HscBean hscBean = (HscBean) o[0];
+			String uuid = UUID.randomUUID().toString();
+			String sgcode = hscBean.getSgcode();
+			String supcode = hscBean.getSupcode();
+			String validdate = hscBean.getValidDate();
+			String uploadfile = hscBean.getUploadFile();
+			String insertSql = " insert into YW_HSC_LSSSPCXSQ(uuid,sgcode,supcode,applydate,validdate,uploadfile,ppstatus) values('"+uuid+"','"+sgcode+"','"+supcode+"',sysdate,to_date('"+validdate+"','yyyy-mm-dd'),'"+uploadfile+"',0)";
+			dao.saveBySQL(insertSql);
+			result.setReturnCode(Constants.SUCCESS_FLAG);
+		} catch (Exception e){
+			result.setReturnCode(Constants.ERROR_FLAG);
+		}
+		return result;
+	}
+	
+	public ReturnObject getHSCLSSSPCXSQ(ReturnObject result ,Object[] o){
+		HscBean hscBean = (HscBean) o[0];
+		int limit = hscBean.getRows();
+		int start = (hscBean.getPage() - 1) * hscBean.getRows();
+		StringBuffer countSQl = new StringBuffer("select count(1) from YW_HSC_LSSSPCXSQ pp,inf_supinfo sup where pp.sgcode = sup.supsgcode and pp.supcode = sup.supid ");
+		StringBuffer rowsSql = new StringBuffer("select pp.uuid,pp.sgcode,pp.supcode,to_char(pp.applydate,'yyyy-mm-dd')applydate,to_char(pp.validdate,'yyyy-mm-dd')validdate,(sysdate - pp.validdate)flag, pp.validdate,pp.uploadfile,pp.ppstatus,pp.temp1,pp.temp2,pp.temp3,pp.temp4,pp.temp5,(pp.supcode || sup.supname) supname from YW_HSC_LSSSPCXSQ pp,inf_supinfo sup where pp.sgcode = sup.supsgcode and pp.supcode = sup.supid ");	
+		StringBuffer wheresql = new StringBuffer(" ");
+		if(!StringUtil.isBlank(hscBean.getSgcode())){
+			wheresql.append(" and pp.sgcode = '"+hscBean.getSgcode()+"'");
+		}
+		if(!StringUtil.isBlank(hscBean.getSupcode())){
+			wheresql.append(" and pp.supcode = '"+hscBean.getSupcode()+"'");
+		}
+		if(!StringUtil.isBlank(hscBean.getStartDate())){
+			wheresql.append(" and to_char(validdate,'yyyy-mm-dd') >= '"+hscBean.getStartDate()+"'");
+		}
+		if(!StringUtil.isBlank(hscBean.getEndDate())){
+			wheresql.append(" and to_char(validdate,'yyyy-mm-dd') <= '"+hscBean.getEndDate()+"'");
+		}
+		try {
+			//统计总条数
+			countSQl.append(wheresql);
+			int countNum = Integer.parseInt(dao.executeSqlCount(countSQl.toString()).get(0).toString());
+			
+			//分页查询
+			rowsSql.append(wheresql);
+			List rowsList = dao.executeSql(rowsSql.toString(), start, limit);
+			result.setTotal(countNum);
+			result.setRows(rowsList);
+			result.setReturnCode(Constants.SUCCESS_FLAG);
+			return result;
+		} catch (Exception e) {
 			result.setReturnCode(Constants.ERROR_FLAG);
 		}
 		return result;
