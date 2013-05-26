@@ -7,6 +7,7 @@ import com.bfuture.app.basic.model.BaseObject;
 public class HscBean extends BaseObject implements Serializable{
 	
 	//辅助参数
+	private String uuid;
 	private String sgcode;
 	private String billno;
 	private String startDate;
@@ -20,6 +21,12 @@ public class HscBean extends BaseObject implements Serializable{
 	private String validDate;
 	private String uploadFile;
 	
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 	public String getSgcode() {
 		return sgcode;
 	}

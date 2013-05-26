@@ -45,6 +45,12 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 		}else if("getHSCLSSSPCXSQ".equals(actionType)){
 			result = this.getHSCLSSSPCXSQ(result, o);
 			return result;
+		}else if("updateppStatus".equals(actionType)){
+			result = this.updateppStatus(result, o);
+			return result;
+		}else if("deleteUUID".equals(actionType)){
+			result = this.deleteUUID(result, o);
+			return result;
 		}
 		return result;
 	}
@@ -398,7 +404,7 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 		int limit = hscBean.getRows();
 		int start = (hscBean.getPage() - 1) * hscBean.getRows();
 		StringBuffer countSQl = new StringBuffer("select count(1) from YW_HSC_LSSSPCXSQ pp,inf_supinfo sup where pp.sgcode = sup.supsgcode and pp.supcode = sup.supid ");
-		StringBuffer rowsSql = new StringBuffer("select pp.uuid,pp.sgcode,pp.supcode,to_char(pp.applydate,'yyyy-mm-dd')applydate,to_char(pp.validdate,'yyyy-mm-dd')validdate,(sysdate - pp.validdate)flag, pp.validdate,pp.uploadfile,pp.ppstatus,pp.temp1,pp.temp2,pp.temp3,pp.temp4,pp.temp5,(pp.supcode || sup.supname) supname from YW_HSC_LSSSPCXSQ pp,inf_supinfo sup where pp.sgcode = sup.supsgcode and pp.supcode = sup.supid ");	
+		StringBuffer rowsSql = new StringBuffer("select pp.uuid,pp.sgcode,pp.supcode,to_char(pp.applydate,'yyyy-mm-dd')applydate,to_char(pp.validdate,'yyyy-mm-dd')validdate,(pp.validdate - sysdate)flag,pp.uploadfile,pp.ppstatus,pp.temp1,pp.temp2,pp.temp3,pp.temp4,pp.temp5,(pp.supcode || '_' ||sup.supname) supname from YW_HSC_LSSSPCXSQ pp,inf_supinfo sup where pp.sgcode = sup.supsgcode and pp.supcode = sup.supid ");	
 		StringBuffer wheresql = new StringBuffer(" ");
 		if(!StringUtil.isBlank(hscBean.getSgcode())){
 			wheresql.append(" and pp.sgcode = '"+hscBean.getSgcode()+"'");
@@ -407,16 +413,15 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 			wheresql.append(" and pp.supcode = '"+hscBean.getSupcode()+"'");
 		}
 		if(!StringUtil.isBlank(hscBean.getStartDate())){
-			wheresql.append(" and to_char(validdate,'yyyy-mm-dd') >= '"+hscBean.getStartDate()+"'");
+			wheresql.append(" and to_char(pp.applydate,'yyyy-mm-dd') >= '"+hscBean.getStartDate()+"'");
 		}
 		if(!StringUtil.isBlank(hscBean.getEndDate())){
-			wheresql.append(" and to_char(validdate,'yyyy-mm-dd') <= '"+hscBean.getEndDate()+"'");
+			wheresql.append(" and to_char(pp.applydate,'yyyy-mm-dd') <= '"+hscBean.getEndDate()+"'");
 		}
 		try {
 			//统计总条数
 			countSQl.append(wheresql);
 			int countNum = Integer.parseInt(dao.executeSqlCount(countSQl.toString()).get(0).toString());
-			
 			//分页查询
 			rowsSql.append(wheresql);
 			List rowsList = dao.executeSql(rowsSql.toString(), start, limit);
@@ -426,6 +431,31 @@ public class HscManagerImpl  extends BaseManagerImpl implements HscManager {
 			return result;
 		} catch (Exception e) {
 			result.setReturnCode(Constants.ERROR_FLAG);
+		}
+		return result;
+	}
+
+	public ReturnObject updateppStatus(ReturnObject result ,Object[] o){
+		HscBean hscBean = (HscBean) o[0];
+		String updateSql = "update yw_hsc_lssspcxsq set ppstatus = '1' where uuid = '"+hscBean.getUuid()+"' ";
+		try {
+			dao.updateSql(updateSql);
+			result.setReturnCode("1");
+		} catch (Exception e) {
+			result.setReturnCode("0");
+		}
+		return result;
+	}
+	
+	public ReturnObject deleteUUID(ReturnObject result ,Object[] o){
+		HscBean hscBean = (HscBean) o[0];
+		String updateSql = "delete from yw_hsc_lssspcxsq where uuid = '"+hscBean.getUuid()+"' ";
+		try {
+			dao.updateSql(updateSql);
+			result.setReturnCode("1");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setReturnCode("0");
 		}
 		return result;
 	}

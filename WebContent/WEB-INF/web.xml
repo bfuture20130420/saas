@@ -228,10 +228,21 @@
 		<servlet-name>CenterDownServlet</servlet-name>
 		<servlet-class>com.bfuture.app.saas.clientapp.servlet.CenterDownServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>DownloadServlet</display-name>
+		<servlet-name>DownloadServlet</servlet-name>
+		<servlet-class>com.bfuture.app.saas.clientapp.servlet.DownloadServlet</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>CenterDownServlet</servlet-name>
 		<url-pattern>/CenterDownServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DownloadServlet</servlet-name>
+		<url-pattern>/DownloadServlet</url-pattern>
 	</servlet-mapping>
 	
 	<session-config>  

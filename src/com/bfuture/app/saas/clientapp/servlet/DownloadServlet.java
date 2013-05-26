@@ -5,28 +5,28 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import com.bfuture.app.saas.model.SysScmuser;
 import com.bfuture.app.saas.service.impl.ShopInfoManagerImpl;
 import com.bfuture.app.saas.util.Constants;
 
-public class DownServlet extends HttpServlet {
+public class DownloadServlet extends HttpServlet {
+
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final Log log = LogFactory.getLog(ShopInfoManagerImpl.class);
 		try {
 			request.setCharacterEncoding("utf-8");
-			String filename = request.getParameter("filename");
+			String filename = request.getParameter("downloadFileName");
 			filename = new String(filename.getBytes("iso-8859-1"), "utf-8");
 			Object obj = request.getSession().getAttribute("LoginUser");
 			if (obj == null) {
@@ -35,8 +35,7 @@ public class DownServlet extends HttpServlet {
 			}
 			SysScmuser currUser = (SysScmuser) obj;
 			response.setHeader("content-disposition", "attachment;filename=" + filename);
-			File uploadedFile = new File(Constants.PromotionApplUrl + File.separator + currUser.getSgcode() + "_" + filename);
-			log.info("--项目路径--" + uploadedFile.getPath());
+			File uploadedFile = new File(Constants.PromotionApplUrl + File.separator + currUser.getSgcode() +"_"+ filename);
 			OutputStream out = response.getOutputStream();
 			InputStream in = new FileInputStream(uploadedFile);
 			Streams.copy(in, out, false);
@@ -46,9 +45,7 @@ public class DownServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		doGet(request, response);
-
 	}
 	
 	public static String toUtf8String(String s) {

@@ -25,6 +25,12 @@
 .icon-down{
 	background:url('icons/down.png') no-repeat;
 }
+.icon-delete{
+	background:url('icons/delete.png') no-repeat;
+}
+.icon-download{
+	background:url('icons/download.png') no-repeat;
+}
 .icon-cancel{
 	background:url('icons/cancel.png') no-repeat;
 }

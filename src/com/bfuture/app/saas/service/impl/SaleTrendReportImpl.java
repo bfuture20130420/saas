@@ -34,6 +34,9 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 		if ("getSaleTrendReport".equals( actionType )) {
 			result = getSaleTrendReport(o);
 			return result;
+		}else if("getChart".equals(actionType)){
+			result = getChart(o);
+			return result;
 		}else if ("getSaleTrendReport3040".equals( actionType )) {
 			result = getSaleTrendReport3040(o);
 			return result;
@@ -235,6 +238,150 @@ public class SaleTrendReportImpl extends BaseManagerImpl implements BaseManager 
 		return result;
 	}
 	
+	/**
+	 * 描述：供应商首页趋势分析
+	 * 备注：公用模块
+	 */
+	public ReturnObject getChart(Object[] o){
+		ReturnObject result = new ReturnObject();
+			try{
+				YwGoodssale goodsale = (YwGoodssale)o[0];
+				String gsTableName="YW_GOODSSALE"+goodsale.getGssgcode();
+				StringBuffer chartSql = new StringBuffer( "SELECT SYSDATE RQ,TO_CHAR(T.GSRQ,'yyyy-MM-DD') GSRQ,SUM(GSXSSL) GSXSSL FROM ").append(gsTableName).append(" T WHERE 1 = 1  " );
+				if( !StringUtil.isBlank( goodsale.getGssupid() ) ){
+					chartSql.append( " and T.GSSUPID = '" ).append( goodsale.getGssupid() ).append("'");
+				}
+				
+				if( !StringUtil.isBlank( goodsale.getGsmfid() ) ){
+					chartSql.append( " and T.GSMFID = '" ).append( goodsale.getGsmfid() ).append("'");
+				}
+				
+				if( !StringUtil.isBlank( goodsale.getGssgcode() ) ){
+					chartSql.append( " and T.GSSGCODE = '" ).append( goodsale.getGssgcode() ).append("'");
+				}
+				
+				if( !StringUtil.isBlank( goodsale.getStartDate() ) ){
+					chartSql.append( " and T.GSRQ >= to_date('" + goodsale.getStartDate() + "','YYYY-MM-DD')" );
+				}
+				
+				if( !StringUtil.isBlank( goodsale.getEndDate() ) ){
+					chartSql.append( " and T.GSRQ <= to_date('" + goodsale.getEndDate() +"','YYYY-MM-DD')" );
+				}
+				
+				chartSql.append( " GROUP BY TO_CHAR(T.GSRQ,'yyyy-MM-DD') " );			
+							
+				if( !StringUtil.isBlank( goodsale.getSaleObject() ) ){
+					chartSql.append( " ORDER BY GSRQ   ");
+				}				
+				
+				List lstChartResult = dao.executeSql( chartSql.toString());
+				
+				if( lstChartResult != null && lstChartResult.size() > 0 ){
+					//按门店重组数据
+					Map< String, Map<String,Map>> mapResult = new HashMap< String, Map<String,Map>>();					
+					for( Iterator<Map> itMap = lstChartResult.iterator(); itMap.hasNext(); ){
+						Map mapGs = itMap.next();
+						String mfid = mapGs.get( "RQ" ).toString();//SHPCODE
+						
+						Map<String,Map> mapMFMap = null;
+						if( mapResult.containsKey( mfid ) ){
+							mapMFMap = mapResult.get( mfid );
+						}
+						else{
+							mapMFMap = new HashMap<String,Map>();
+							mapResult.put( mfid, mapMFMap );
+						}
+						mapMFMap.put( mapGs.get("GSRQ").toString(), mapGs );
+					}
+					
+					//初始化日期范围
+					SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+					Date ed = sdf.parse(goodsale.getEndDate() );
+					List<String> lstRq = new ArrayList<String>();
+					for( Date sd = sdf.parse(goodsale.getStartDate() ); sd.compareTo( ed ) <= 0;  ){
+						lstRq.add( sdf.format(sd) );
+						Calendar cal = Calendar.getInstance();
+						cal.setTime( sd );
+						cal.add( Calendar.DAY_OF_MONTH, 1 );
+						sd = cal.getTime();
+					}
+					
+					JSONObject json = new JSONObject();
+					
+					JSONObject chart = new JSONObject();
+					chart.put( "caption", "" );
+					chart.put( "xaxisname", "日  期" );
+					
+					String yaxisname = null; 
+					if( "GSXSSR".equals( goodsale.getSaleObject() ) ){
+						yaxisname = "销售总额";
+					}
+					chart.put( "yaxisname", yaxisname );
+					chart.put( "showvalues", "0" );
+					chart.put( "formatNumberScale", "0" );
+					chart.put( "decimals", "2" );
+					chart.put( "animation", "1" );
+					chart.put( "bgColor", "FFFFFF" );
+					chart.put( "legendPosition", "BOTTOM");
+					json.put( "chart", chart );
+					
+					JSONArray categories = new JSONArray();
+					JSONArray category = new JSONArray();
+					JSONArray dataset = new JSONArray();
+					
+					for( Iterator<String> itRq = lstRq.iterator(); itRq.hasNext(); ){
+						String rq = itRq.next();
+						JSONObject joCategory = new JSONObject();
+						joCategory.put( "label", rq );
+						category.add( joCategory );
+					}
+					
+					JSONObject joCategory = new JSONObject();
+					joCategory.put( "category", category );
+					categories.add( joCategory );
+					json.put( "categories", categories );
+					
+					for( Iterator<String> itMfid = mapResult.keySet().iterator(); itMfid.hasNext(); ){
+						String mfid = itMfid.next();
+						Map<String,Map> mapRqgs = mapResult.get( mfid );
+						JSONObject joDataset = new JSONObject();
+						JSONArray jaData = new JSONArray();
+						
+						for( Iterator<String> itRq = lstRq.iterator(); itRq.hasNext(); ){
+							String rq = itRq.next();
+							JSONObject joData = new JSONObject();
+							
+							if( mapRqgs.containsKey( rq ) ){
+								Map mapGs = mapRqgs.get( rq );
+								if( "GSXSSL".equals( goodsale.getSaleObject() ) ){
+									joData.put( "value", Double.parseDouble( mapGs.get("GSXSSL") != null ? mapGs.get("GSXSSL").toString() : "0" ) );
+								}
+								if( "GSXSSR".equals( goodsale.getSaleObject() ) ){
+									joData.put( "value", Double.parseDouble( mapGs.get("GSXSSR") != null ? mapGs.get("GSXSSR").toString() : "0" ) );
+								}
+							}
+							else{
+								joData.put( "value", "0" ); 
+							}
+							jaData.add( joData );
+						}
+						
+						joDataset.put( "data", jaData );
+						dataset.add( joDataset );
+					}
+					
+					json.put( "dataset", dataset );
+					
+					result.setReturnCode( Constants.SUCCESS_FLAG );
+					result.setChartData( json );
+				}
+				return result;
+			}catch( Exception ex ){
+				result.setReturnCode( Constants.ERROR_FLAG );
+				result.setReturnInfo( ex.getMessage() );
+			}
+			return result;
+	}
 	
 	/**
 	 * 编辑：刘波

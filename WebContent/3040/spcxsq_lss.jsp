@@ -25,9 +25,10 @@ $("#spcxsqlss_searchWindow_startDate").val( now.format('yyyy-MM-dd') );
 $("#spcxsqlss_searchWindow_endDate").attr("value",new Date().format('yyyy-MM-dd'));
 $("#spcxsqlss_uploadWindow_validDate").attr("value",validNow.format('yyyy-MM-dd'));
 
+
 $(function(){
 	$('#spcxsqlssDataGrid').datagrid({	
-		width: 800 ,
+		width: 897 ,
 		nowrap: false,
 		striped: true,
 		url:'',		
@@ -36,11 +37,33 @@ $(function(){
 		singleSelect: true,				
 		loadMsg:'加载数据...',				
 		columns:[[				
-			{field:'SHPCODE',title:'供应商名称',width:300,align:'left'},
-			{field:'SHPNAME',title:'申请日期',width:100,align:'center',sortable:true},
-			{field:'GSXSSL',title:'是否查看',width:100,align:'center',sortable:true},	
-			{field:'GSXSSL',title:'是否通过',width:100,align:'center',sortable:true},	
-			{field:'GSHSJJJE',title:'相关操作', width:165,sortable:true,align:'center'}
+			{field:'SUPNAME',title:'供应商名称',width:313,align:'left'},
+			{field:'APPLYDATE',title:'申请日期',width:120,align:'center'},
+			{field:'VALIDDATE',title:'有效日期',width:120,align:'center'},
+			{field:'PPSTATUS',title:'是否查看',width:120,align:'center',
+				formatter:function(value,rec){
+					if(value == "0"){
+						return "否";
+					}else{
+						return "是";
+					}
+				}
+			},	
+			{field:'FLAG',title:'是否过期',width:120,align:'center',
+				formatter:function(value,rec){
+					if(value > 0){
+						return "否";
+					}else{
+						return "是";
+					}
+				}
+			},	
+			{field:'UPLOADFILE',title:'相关操作', width:70,align:'center',
+				formatter:function(value,rec){
+					return '<img src="${pageContext.request.contextPath }/themes/icons/download.png" title="查看" width="16" height="16" onclick=downloadFile("'+value+'") />&nbsp;&nbsp;'+
+						   '<img src="${pageContext.request.contextPath }/themes/icons/delete.png" title="删除" width="16" height="16" onclick=deleteFile("'+rec.UUID+'") />';
+				}
+			}
 		]],
 		toolbar:[{
 				id : "spcxsqlssDataGrid_search",
@@ -64,14 +87,6 @@ $(function(){
 				iconCls:'icon-up',
 				handler:function(){
 					$('#spcxsqlss_uploadWindow').window('open');
-				}
-			},
-			{
-				id : "spcxsqlssDataGrid_Export",
-				text:'导出Excel',
-				iconCls:'icon-redo',
-				handler:function(){
-					
 				}
 			}],
 		pagination:true,
@@ -104,6 +119,7 @@ $(function(){
 		}
 	});
 	
+	searchCXSHLSS();
 });
 
 function uploadCXSHLSS(){
@@ -142,11 +158,10 @@ function uploadCXSHLSS(){
 		}, 
 		function(data){
 			if (data.returnCode == '1') {
-				$.messager.alert('提示', '提交成功!', 'info');				
-				return true;
+				searchCXSHLSS();
+				$.messager.alert('提示', '提交成功!', 'info');	
 			}else {
 				$.messager.alert('提示', '提交失败!' + data.returnInfo, 'error');
-				return false;
 			}
 		}, 
 		'json');
@@ -156,7 +171,6 @@ function searchCXSHLSS(){
 	var startDate = $('#spcxsqlss_searchWindow_startDate').val();
 	var endDate = $('#spcxsqlss_searchWindow_endDate').val();
 	var supcode = $('#spcxsqlss_searchWindow_supid').val();
-	
 	$('#spcxsqlssDataGrid').datagrid('options').url = 'JsonServlet';        
 	$('#spcxsqlssDataGrid').datagrid('options').queryParams = {
 		data :obj2str(
@@ -165,13 +179,54 @@ function searchCXSHLSS(){
 				ACTION_CLASS : 'com.bfuture.app.saas.model.HscBean',
 				ACTION_MANAGER : 'hscManager',		 
 				list:[{
-					
+					sgcode : '<%=sgcode%>',
+					supcode : supcode,
+					startDate : startDate,
+					endDate : endDate
 				}]
 			}
 		)
 	};	
 	$("#spcxsqlssDataGrid").datagrid('reload');  
-	$("#spcxsqlssDataGrid").datagrid('resize');  
+	$("#spcxsqlssDataGrid").datagrid('resize'); 
+	goBackSearchCXSHLSS();
+}
+
+function downloadFile(filename){
+	filename = encodeURI(encodeURI(filename));
+	window.location = "${pageContext.request.contextPath}/DownloadServlet?downloadFileName="+filename;
+}
+
+function deleteFile(uuid){
+	if(uuid != "" && uuid != null || uuid != null){
+		$.messager.confirm('确认信息','删除数据后不可恢复，确认要删除吗？',function(r){
+			if(r){
+				$.post( 'JsonServlet',				
+				{
+					data :obj2str(
+						{		
+							ACTION_TYPE : 'deleteUUID',
+							ACTION_CLASS : 'com.bfuture.app.saas.model.HscBean',
+							ACTION_MANAGER : 'hscManager',												 
+							list:[{
+								uuid : uuid
+							}]
+						}
+					)						
+				}, 
+				function(data){ 
+				    if(data.returnCode == '1' ){
+				    	searchCXSHLSS();
+				    	$.messager.alert('提示','删除成功','error');                   	 
+				    }else{ 
+				        $.messager.alert('提示','找不到相关记录','error');
+				    } 
+			   	},
+			   	'json'
+			    );
+			}
+		});
+	}
 }
 
 function goBackSearchCXSHLSS(){
@@ -181,12 +236,20 @@ function goBackSearchCXSHLSS(){
 function goBackUploadCXSHLSS(){
 	$('#spcxsqlss_uploadWindow').window('close');
 }
+
+function clearForm(obj){
+	$(':input',obj)   
+	 .not(':button, :submit, :reset, :hidden')   
+	 .val('')   
+	 .removeAttr('checked')   
+	 .removeAttr('selected');
+}
 	
 </script>
 </head>
 <body>
 <center>
-<div id="spcxsqlss_mainPanel" class="easyui-panel" title="零售商商品促销申请列表" style="width: 800px;height: 600px;">
+<div id="spcxsqlss_mainPanel" class="easyui-panel" title="零售商商品促销申请列表" style="width: 900px;height: 400px;">
 	<table id="spcxsqlssDataGrid"></table>
 </div>
 <div id="spcxsqlss_searchWindow" title="查询窗口" class="easyui-window" closed="true" collapsible="false" minimizable="false" maximizable="false" closable="false" modal="true" style="width: 280px;height: 160px;">

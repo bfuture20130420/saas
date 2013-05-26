@@ -60,7 +60,7 @@ public static String toUtf8String(String s) {
 				ro.put("err","附件不能大于5M");
 			}else{
 				String name = fileItem.getName().substring(fileItem.getName().lastIndexOf("\\") + 1);
-				name = currUser.getSgcode()+ fileDate + "_" + toUtf8String(name); 
+				name = currUser.getSgcode()+"_"+fileDate + toUtf8String(name);
 				File uploadedFile = new File(Constants.PromotionApplUrl + File.separator + name);
 				uploadedFile.getParentFile().mkdirs();
 				System.out.println(uploadedFile.exists());
